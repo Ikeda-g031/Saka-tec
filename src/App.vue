@@ -1,7 +1,18 @@
+<!--
+作成者：土田勇斗
+初版作成者：土田勇斗
+変更履歴：
+ソース内容：
+- Vueアプリの一番上の親コンポーネント(大黒柱)
+- 他のコンポーネントを配置する。
+-->
+
+<!-- JavaScriptの部分 -->
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
 </script>
 
+<!-- HTMLの部分 -->
 <template>
   <div id="app">
     <header>
@@ -11,6 +22,7 @@ import HelloWorld from './components/HelloWorld.vue'
   </div>
 </template>
 
+<!-- CSSの部分 -->
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
