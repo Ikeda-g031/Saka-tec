@@ -140,10 +140,8 @@ const onCellClick = (cellId) => {
 <style scoped>
 .home-screen {
   width: 100%;
-  min-height: 100vh;
   background-color: transparent;
-  display: flex;
-  flex-direction: column;
+  display: block;
   position: relative;
   margin: 0;
   padding: 0;
@@ -156,21 +154,23 @@ const onCellClick = (cellId) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px 20px;
+  padding: 15px 10px;
   color: white;
   width: 100%;
   margin: 0;
+  min-height: 60px;
 }
 
 .nav-button {
   background: none;
   border: none;
   color: white;
-  font-size: 2rem;
+  font-size: 1.8rem;
   cursor: pointer;
   padding: 8px 12px;
   border-radius: 50%;
   transition: background-color 0.2s ease;
+  flex-shrink: 0;
 }
 
 .nav-button:hover {
@@ -183,11 +183,14 @@ const onCellClick = (cellId) => {
 }
 
 .week-title {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 600;
   margin: 0;
   text-align: center;
   flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* 時間割表 */
@@ -195,13 +198,12 @@ const onCellClick = (cellId) => {
   background: white;
   overflow: visible;
   width: 100%;
-  flex: 1;
   margin: 0;
 }
 
 .header-row {
   display: grid;
-  grid-template-columns: minmax(60px, 100px) repeat(5, 1fr);
+  grid-template-columns: minmax(60px, 80px) repeat(5, 1fr);
   background: #e8f0fe;
   border-bottom: 2px solid #ddd;
   width: 100%;
@@ -210,32 +212,12 @@ const onCellClick = (cellId) => {
 .period-header {
   background: #d1d9e6;
   border-right: 1px solid #ccc;
+  min-height: 50px;
 }
 
 .day-header {
   background: #d1d9e6;
-  padding: 15px 8px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #333;
-  border-right: 1px solid #ccc;
-}
-
-.day-header:last-child {
-  border-right: none;
-}
-
-.timetable-row {
-  display: grid;
-  grid-template-columns: minmax(60px, 100px) repeat(5, 1fr);
-  border-bottom: 1px solid #e0e0e0;
-  width: 100%;
-}
-
-.period-cell {
-  background: #d1d9e6;
-  padding: 20px 8px;
+  padding: 12px 8px;
   text-align: center;
   font-weight: 600;
   font-size: 1.1rem;
@@ -246,12 +228,37 @@ const onCellClick = (cellId) => {
   justify-content: center;
 }
 
+.day-header:last-child {
+  border-right: none;
+}
+
+.timetable-row {
+  display: grid;
+  grid-template-columns: minmax(60px, 80px) repeat(5, 1fr);
+  border-bottom: 1px solid #e0e0e0;
+  width: 100%;
+}
+
+.period-cell {
+  background: #d1d9e6;
+  padding: 15px 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #333;
+  border-right: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70px;
+}
+
 .schedule-cell {
   background: #f8f9fa;
   border-right: 1px solid #e0e0e0;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-height: 80px;
+  min-height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -268,7 +275,7 @@ const onCellClick = (cellId) => {
 
 .class-content {
   text-align: center;
-  padding: 8px 4px;
+  padding: 6px 4px;
   width: 100%;
 }
 
@@ -276,14 +283,14 @@ const onCellClick = (cellId) => {
   font-weight: 600;
   font-size: 1rem;
   color: #333;
-  margin-bottom: 6px;
-  line-height: 1.3;
+  margin-bottom: 4px;
+  line-height: 1.2;
 }
 
 .class-room {
   font-size: 0.9rem;
   color: #666;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 /* 色分けスタイル */
@@ -307,123 +314,36 @@ const onCellClick = (cellId) => {
   border-left: 4px solid #9c27b0;
 }
 
-/* 大画面用の調整 */
-@media (min-width: 1200px) {
-  .header-row,
-  .timetable-row {
-    grid-template-columns: minmax(100px, 140px) repeat(5, 1fr);
-  }
-  
-  .period-cell {
-    padding: 25px 12px;
-    font-size: 1.2rem;
-  }
-  
-  .schedule-cell {
-    min-height: 90px;
-    padding: 8px;
-  }
-  
-  .class-name {
-    font-size: 1.1rem;
-  }
-  
-  .class-room {
-    font-size: 0.95rem;
-  }
-}
-
-/* ラップトップ用の調整 */
-@media (max-width: 1199px) and (min-width: 1024px) {
-  .header-row,
-  .timetable-row {
-    grid-template-columns: minmax(90px, 130px) repeat(5, 1fr);
-  }
-  
-  .period-cell {
-    padding: 22px 10px;
-    font-size: 1.15rem;
-  }
-  
-  .schedule-cell {
-    min-height: 85px;
-    padding: 6px;
-  }
-  
-  .class-name {
-    font-size: 1.05rem;
-  }
-  
-  .class-room {
-    font-size: 0.9rem;
-  }
-}
-
 /* レスポンシブデザイン */
 @media (max-width: 768px) {
   .header {
-    padding: 12px 15px;
-  }
-  
-  .timetable {
-    width: 100%;
+    padding: 12px 5px;
+    min-height: 50px;
   }
   
   .week-title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   
   .nav-button {
     font-size: 1.5rem;
-    padding: 6px 10px;
+    padding: 6px 8px;
   }
   
   .header-row,
   .timetable-row {
-    grid-template-columns: 60px repeat(5, 1fr);
+    grid-template-columns: minmax(35px, 50px) repeat(5, 1fr);
   }
   
   .day-header {
-    padding: 12px 4px;
-    font-size: 1rem;
-  }
-  
-  .period-cell {
-    padding: 15px 4px;
-    font-size: 1rem;
-  }
-  
-  .schedule-cell {
-    min-height: 70px;
-  }
-  
-  .class-name {
-    font-size: 0.85rem;
-  }
-  
-  .class-room {
-    font-size: 0.75rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .week-title {
-    font-size: 1rem;
-  }
-  
-  .header-row,
-  .timetable-row {
-    grid-template-columns: 50px repeat(5, 1fr);
-  }
-  
-  .day-header {
-    padding: 10px 2px;
+    padding: 10px 1px;
     font-size: 0.9rem;
   }
   
   .period-cell {
-    padding: 12px 2px;
+    padding: 12px 1px;
     font-size: 0.9rem;
+    min-height: 60px;
   }
   
   .schedule-cell {
@@ -438,4 +358,69 @@ const onCellClick = (cellId) => {
     font-size: 0.7rem;
   }
 }
+
+@media (max-width: 480px) {
+  .header {
+    padding: 10px 3px;
+  }
+  
+  .week-title {
+    font-size: 1rem;
+  }
+  
+  .header-row,
+  .timetable-row {
+    grid-template-columns: minmax(30px, 40px) repeat(5, 1fr);
+  }
+  
+  .day-header {
+    padding: 8px 1px;
+    font-size: 0.8rem;
+  }
+  
+  .period-cell {
+    padding: 10px 1px;
+    font-size: 0.8rem;
+    min-height: 50px;
+  }
+  
+  .schedule-cell {
+    min-height: 50px;
+  }
+  
+  .class-name {
+    font-size: 0.75rem;
+  }
+  
+  .class-room {
+    font-size: 0.65rem;
+  }
+}
+
+/* 大画面用の調整 */
+@media (min-width: 1200px) {
+  .header-row,
+  .timetable-row {
+    grid-template-columns: minmax(100px, 150px) repeat(5, 1fr);
+  }
+  
+  .period-cell {
+    padding: 20px 12px;
+    font-size: 1.2rem;
+    min-height: 80px;
+  }
+  
+  .schedule-cell {
+    min-height: 80px;
+  }
+  
+  .class-name {
+    font-size: 1.1rem;
+  }
+  
+  .class-room {
+    font-size: 1rem;
+  }
+}
+
 </style> 
