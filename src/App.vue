@@ -4,34 +4,46 @@
 変更履歴：
 ソース内容：
 - Vueアプリの一番上の親コンポーネント(大黒柱)
-- 他のコンポーネントを配置する。
+- 授業スケジュール管理システムのホーム画面を表示
 -->
 
 <!-- JavaScriptの部分 -->
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import HomeScreen from './components/HomeScreen.vue'
 </script>
 
 <!-- HTMLの部分 -->
 <template>
   <div id="app">
-    <header>
-      <img alt="Vue logo" class="logo" src="/src/assets/logo.svg" width="125" height="125" />
-      <HelloWorld msg="Welcome to Your Vue.js App" />
-    </header>
+    <HomeScreen />
   </div>
 </template>
 
 <!-- CSSの部分 -->
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.logo {
-  margin-bottom: 20px;
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  display: block;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* すべてのメディアクエリでパディングなし - 完全フルスクリーン */
 </style>
