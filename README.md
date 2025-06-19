@@ -75,9 +75,9 @@ simple-app/
 ## 📝 開発ガイドライン
 - feat: 新機能の追加
 - fix: バグ修正
+- refactor: リファクタリング
 - docs: ドキュメントの更新
 - style: コードフォーマットの修正
-- refactor: リファクタリング
 - test: テストの追加・修正
 - chore: その他の変更
 
