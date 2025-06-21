@@ -2,11 +2,23 @@
 作成者：土田勇斗
 初版作成者：土田勇斗
 変更履歴：
+6/21 22:47
+本間遥人
+Jugyougai.vueへ移動できるよう15行目-21行目、101行目-104行目を追加
 ソース内容：時間割表のホーム画面
 -->
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+//画面遷移
+const router = useRouter()
+
+//Jugyougai.vueへ移動
+const goToJugyogai = () => {
+  router.push('/jugyogai')
+}
 
 // 現在の週の期間を計算
 const getCurrentWeekRange = () => {
@@ -86,6 +98,10 @@ const onCellClick = (cellId) => {
       <button class="nav-button" @click="nextWeek">
         <span class="arrow">›</span>
       </button>
+      <!-- 授業以外予定を追加するボタン -->
+      <button @click="goToJugyogai" class="nav-button" style="font-size: 0.9rem;">
+      授業以外追加
+    </button>
     </div>
 
     <!-- 時間割表 -->
@@ -93,8 +109,8 @@ const onCellClick = (cellId) => {
       <!-- 曜日ヘッダー -->
       <div class="header-row">
         <div class="period-header"></div>
-        <div 
-          v-for="day in days" 
+        <div
+          v-for="day in days"
           :key="day"
           class="day-header"
         >
@@ -103,8 +119,8 @@ const onCellClick = (cellId) => {
       </div>
 
       <!-- 時間割の行 -->
-      <div 
-        v-for="period in periods" 
+      <div
+        v-for="period in periods"
         :key="period"
         class="timetable-row"
       >
@@ -114,13 +130,13 @@ const onCellClick = (cellId) => {
         </div>
 
         <!-- 授業セル -->
-        <div 
+        <div
           v-for="(day, dayIndex) in days"
           :key="`${day}-${period}`"
           :class="['schedule-cell', getCellColorClass(getCellData(getCellId(dayIndex, period)))]"
           @click="onCellClick(getCellId(dayIndex, period))"
         >
-          <div 
+          <div
             v-if="getCellData(getCellId(dayIndex, period))"
             class="class-content"
           >
@@ -320,40 +336,40 @@ const onCellClick = (cellId) => {
     padding: 12px 5px;
     min-height: 50px;
   }
-  
+
   .week-title {
     font-size: 1.1rem;
   }
-  
+
   .nav-button {
     font-size: 1.5rem;
     padding: 6px 8px;
   }
-  
+
   .header-row,
   .timetable-row {
     grid-template-columns: minmax(35px, 50px) repeat(5, 1fr);
   }
-  
+
   .day-header {
     padding: 10px 1px;
     font-size: 0.9rem;
   }
-  
+
   .period-cell {
     padding: 12px 1px;
     font-size: 0.9rem;
     min-height: 60px;
   }
-  
+
   .schedule-cell {
     min-height: 60px;
   }
-  
+
   .class-name {
     font-size: 0.8rem;
   }
-  
+
   .class-room {
     font-size: 0.7rem;
   }
@@ -363,35 +379,35 @@ const onCellClick = (cellId) => {
   .header {
     padding: 10px 3px;
   }
-  
+
   .week-title {
     font-size: 1rem;
   }
-  
+
   .header-row,
   .timetable-row {
     grid-template-columns: minmax(30px, 40px) repeat(5, 1fr);
   }
-  
+
   .day-header {
     padding: 8px 1px;
     font-size: 0.8rem;
   }
-  
+
   .period-cell {
     padding: 10px 1px;
     font-size: 0.8rem;
     min-height: 50px;
   }
-  
+
   .schedule-cell {
     min-height: 50px;
   }
-  
+
   .class-name {
     font-size: 0.75rem;
   }
-  
+
   .class-room {
     font-size: 0.65rem;
   }
@@ -403,24 +419,24 @@ const onCellClick = (cellId) => {
   .timetable-row {
     grid-template-columns: minmax(100px, 150px) repeat(5, 1fr);
   }
-  
+
   .period-cell {
     padding: 20px 12px;
     font-size: 1.2rem;
     min-height: 80px;
   }
-  
+
   .schedule-cell {
     min-height: 80px;
   }
-  
+
   .class-name {
     font-size: 1.1rem;
   }
-  
+
   .class-room {
     font-size: 1rem;
   }
 }
 
-</style> 
+</style>
