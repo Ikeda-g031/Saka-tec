@@ -10,12 +10,13 @@
 <!-- JavaScriptの部分 -->
 <script setup>
 import HomeScreen from './components/HomeScreen.vue'
+import ClassDetailViewScreen from './components/ClassDetailViewScreen.vue'
 </script>
 
 <!-- HTMLの部分 -->
 <template>
   <div id="app">
-    <HomeScreen />
+    <ClassDetailViewScreen />
   </div>
 </template>
 
