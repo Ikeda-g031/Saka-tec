@@ -10,12 +10,13 @@
 <!-- JavaScriptの部分 -->
 <script setup>
 import HomeScreen from './components/HomeScreen.vue'
+import Classinfoedit from './components/Classinfoedit.vue'
 </script>
 
 <!-- HTMLの部分 -->
 <template>
   <div id="app">
-    <HomeScreen />
+    <Classinfoedit />
   </div>
 </template>
 
