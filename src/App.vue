@@ -25,11 +25,7 @@ import ClassDetailViewScreen from './components/ClassDetailViewScreen.vue'
 <!-- HTMLの部分 -->
 <template>
   <div id="app">
-<<<<<<< HEAD
-    <ClassDetailViewScreen />
-=======
     <router-view />
->>>>>>> c7ae82a0fa9879f750fd6cbfc0a46c68e976feef
   </div>
 </template>
 
