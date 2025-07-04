@@ -9,7 +9,6 @@
 
 <!-- JavaScriptの部分 -->
 <script setup>
-import HomeScreen from './components/HomeScreen.vue'
 import Classinfoedit from './components/Classinfoedit.vue'
 </script>
 
