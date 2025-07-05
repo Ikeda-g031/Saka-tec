@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // 表示する講義情報（仮データ）
 const course = ref({
@@ -12,9 +15,9 @@ const course = ref({
   description: 'システムの基礎を学ぶ。'
 })
 
-// 戻る処理（consoleログにとどめています）
+// 戻る処理（画面遷移）
 const goBack = () => {
-  console.log('戻るボタンが押されました')
+  router.back()
 }
 
 const editCourse = () => {
@@ -26,7 +29,7 @@ const editCourse = () => {
   <div class="course-detail-screen min-h-screen bg-gray-100">
     <!-- ヘッダー -->
     <div class="header">
-      <button class="nav-button" @click="goBack">←</button>
+      <button class="nav-button" @click="goBack">‹</button>
       <h1 class="title">{{ course.name }}</h1>
       <button class="nav-button" @click="editCourse">
         ✎

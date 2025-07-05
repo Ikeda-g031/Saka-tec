@@ -15,9 +15,14 @@ import { useRouter } from 'vue-router'
 //画面遷移
 const router = useRouter()
 
-//Jugyougai.vueへ移動
-const goToJugyogai = () => {
-  router.push('/jugyogai')
+//SlectSchedule.vueへ移動
+const goToSelectSchedule = () => {
+  router.push('/SelectSchedule')
+}
+
+//ClassDetailViewScreen.vueへ移動
+const goToClassDetailViewScreen = () => {
+  router.push('/ClassDetailViewScreen')
 }
 
 // 現在の週の期間を計算
@@ -83,7 +88,14 @@ const nextWeek = () => {
 
 // セルクリック処理
 const onCellClick = (cellId) => {
-  console.log('セルクリック:', cellId)
+  const cell = getCellData(cellId)
+  if (cell) {
+    // 空でないセルの場合、ClassDatailViewScreen.vueへ遷移
+    goToClassDetailViewScreen()
+  } else {
+    // 空セルの場合は予定追加画面へ
+    goToSelectSchedule()
+  }
 }
 </script>
 
@@ -98,10 +110,7 @@ const onCellClick = (cellId) => {
       <button class="nav-button" @click="nextWeek">
         <span class="arrow">›</span>
       </button>
-      <!-- 授業以外予定を追加するボタン -->
-      <button @click="goToJugyogai" class="nav-button" style="font-size: 0.9rem;">
-      授業以外追加
-    </button>
+
     </div>
 
     <!-- 時間割表 -->
