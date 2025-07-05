@@ -8,6 +8,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeScreen from './components/HomeScreen.vue'
 import Jugyogai from './components/Jugyogai.vue'  // ← Jugyogaiをインポート
+import SelectSchedule from './components/SelectSchedule.vue'  // ← SelectScheduleをインポート
+import Classinfoedit from './components/Classinfoedit.vue'  // ← Classinfoeditをインポート
+import ClassDetailViewScreen from './components/ClassDetailViewScreen.vue'  // ← ClassDetailViewScreenをインポート
 
 const routes = [
   {
@@ -19,6 +22,21 @@ const routes = [
     path: '/jugyogai',
     name: 'Jugyogai',
     component: Jugyogai
+  },
+  {
+    path: '/SelectSchedule',
+    name: 'SelectSchedule',
+    component: SelectSchedule
+  },
+  {
+    path: '/Classinfoedit',
+    name: 'Classinfoedit',
+    component: Classinfoedit
+  },
+  {
+    path: '/ClassDetailViewScreen',
+    name: 'ClassDetailViewScreen',
+    component: ClassDetailViewScreen
   }
 ]
 
