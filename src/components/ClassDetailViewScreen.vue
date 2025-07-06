@@ -1,18 +1,44 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { timetableService } from '../services/database.js'
 
 const router = useRouter()
+const route = useRoute()
 
-// 表示する講義情報（仮データ）
+// 表示する講義情報
 const course = ref({
-  name: 'システム論',
-  teacher: '田中 教授',
-  credit: 2,
-  term: '前期 月曜1限',
-  room: '201F',
-  syllabusUrl: 'https://example.com/syllabus/sys101',
-  description: 'システムの基礎を学ぶ。'
+  id: null,
+  name: '',
+  teacher: '',
+  credits: 0,
+  day: 0,
+  period: 1,
+  room: '',
+  syllabusUrl: '',
+  note: '',
+  color: 'blue'
+})
+
+// 授業データを読み込む
+const loadCourseData = async () => {
+  try {
+    const classId = parseInt(route.query.id)
+    if (classId) {
+      const classes = await timetableService.getAllClasses()
+      const foundClass = classes.find(c => c.id === classId)
+      if (foundClass) {
+        course.value = foundClass
+      }
+    }
+  } catch (error) {
+    console.error('授業データ読み込みエラー:', error)
+  }
+}
+
+// コンポーネントマウント時にデータを読み込み
+onMounted(async () => {
+  await loadCourseData()
 })
 
 // 戻る処理（画面遷移）
@@ -20,8 +46,51 @@ const goBack = () => {
   router.back()
 }
 
+// 曜日・時限を表示用テキストに変換
+const getDayPeriodText = (day, period) => {
+  const dayNames = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日']
+  const dayText = dayNames[day] || '未設定'
+  const periodText = period === 'lunch' ? '昼' : `${period}限`
+  return `${dayText} ${periodText}`
+}
+
+// 編集ボタンが押された時の処理
 const editCourse = () => {
-  console.log('編集ボタンが押されました')
+  // 授業データを編集画面に渡す
+  router.push({
+    path: '/Classinfoedit',
+    query: { 
+      id: course.value.id,
+      edit: 'true'
+    }
+  })
+}
+
+// 削除ボタンが押された時の処理
+const deleteCourse = async () => {
+  if (!course.value.id) {
+    alert('削除対象の授業が見つかりません。')
+    return
+  }
+
+  // 確認ダイアログを表示
+  const confirmDelete = confirm(`「${course.value.name}」を削除しますか？\nこの操作は取り消せません。`)
+  
+  if (confirmDelete) {
+    try {
+      // データベースから削除
+      await timetableService.deleteClass(course.value.id)
+      
+      alert('授業を削除しました。')
+      
+      // ホーム画面に戻る
+      router.push('/')
+      
+    } catch (error) {
+      console.error('削除エラー:', error)
+      alert('削除に失敗しました。もう一度お試しください。')
+    }
+  }
 }
 </script>
 
@@ -42,13 +111,13 @@ const editCourse = () => {
       <div class="card">
         <h2 class="course-title">{{ course.name }}</h2>
         <p>教員名: {{ course.teacher }}</p>
-        <p>単位数: {{ course.credit }}</p>
-        <p>開講時期: {{ course.term }}</p>
+        <p>単位数: {{ course.credits }}</p>
+        <p>開講時期: {{ getDayPeriodText(course.day, course.period) }}</p>
         <p>教室: {{ course.room }}</p>
       </div>
 
       <!-- シラバス -->
-      <div class="card">
+      <div class="card" v-if="course.syllabusUrl">
         <h3 class="card-title">シラバスURL</h3>
         <a :href="course.syllabusUrl" class="link" target="_blank">
           {{ course.syllabusUrl }}
@@ -56,9 +125,16 @@ const editCourse = () => {
       </div>
 
       <!-- 授業概要 -->
-      <div class="card">
+      <div class="card" v-if="course.note">
         <h3 class="card-title">授業概要／備考</h3>
-        <p>{{ course.description }}</p>
+        <p>{{ course.note }}</p>
+      </div>
+
+      <!-- 削除ボタン -->
+      <div class="delete-section">
+        <button class="delete-button" @click="deleteCourse">
+          🗑️ この授業を削除
+        </button>
       </div>
     </div>
   </div>
@@ -135,5 +211,37 @@ const editCourse = () => {
 .link {
   color: #2563eb;
   text-decoration: underline;
+}
+
+/* 削除セクション */
+.delete-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: center;
+}
+
+.delete-button {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.delete-button:hover {
+  background-color: #dc2626;
+}
+
+.delete-button:active {
+  background-color: #b91c1c;
 }
 </style>
