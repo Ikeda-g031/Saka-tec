@@ -25,12 +25,20 @@ const goBack = () => {
   router.back()
 }
 const addLesson = () => {
-  // 授業の予定追加画面へ遷移
-  router.push('/Classinfoedit')
+  // 授業の予定追加画面へ遷移（曜日・時限情報を引き継ぐ）
+  const query = router.currentRoute.value.query
+  router.push({
+    path: '/Classinfoedit',
+    query: query
+  })
 }
 const addOther = () => {
-  // 授業以外の予定追加画面へ遷移
-  router.push('/jugyogai')
+  // 授業以外の予定追加画面へ遷移（曜日・時限情報を引き継ぐ）
+  const query = router.currentRoute.value.query
+  router.push({
+    path: '/jugyogai',
+    query: query
+  })
 }
 </script>
 
