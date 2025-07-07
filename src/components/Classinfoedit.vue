@@ -1,109 +1,80 @@
 <template>
-  <div class="wrapper">
-    <div class="form-container">
-      <h2>授業情報を編集</h2>
-      <form @submit.prevent="submitForm">
-        <label>授業名 <input v-model="form.title" /></label>
-        <label>教員名 <input v-model="form.instructor" /></label>
-        <label>単位数 <input v-model="form.units" type="number" /></label>
-        <label>開講期間 <input v-model="form.period" /></label>
-        <label>教室 <input v-model="form.classroom" /></label>
-        <label>シラバスURL <input v-model="form.syllabusUrl" /></label>
-        <label>授業概要/備考 <textarea v-model="form.notes" rows="3"></textarea></label>
-        <label>セルの色
-          <select v-model="form.cellColor">
-            <option>スカイブルー</option>
-            <option>グリーン</option>
-            <option>ピンク</option>
-          </select>
-        </label>
-        <label>繰り返し設定
-          <select v-model="form.repeatSetting">
-            <option>毎週</option>
-            <option>隔週</option>
-            <option>なし</option>
-          </select>
-        </label>
-        <button type="submit">保存する</button>
-      </form>
-    </div>
-  </div>
+  <form @submit="handleSubmit" class="max-w-xl mx-auto p-6 bg-white rounded shadow">
+    <h2 class="text-xl font-bold mb-4">授業情報を編集</h2>
+
+    <label class="block mb-2">授業名</label>
+    <input v-model="formData.courseName" name="courseName" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">教員名</label>
+    <input v-model="formData.teacherName" name="teacherName" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">単位数</label>
+    <input v-model.number="formData.credits" name="credits" type="number" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">開講期間</label>
+    <input v-model="formData.term" name="term" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">教室</label>
+    <input v-model="formData.classroom" name="classroom" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">シラバスURL</label>
+    <input v-model="formData.syllabusUrl" name="syllabusUrl" type="url" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">授業概要/備考</label>
+    <textarea v-model="formData.notes" name="notes" rows="3" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">セルの色</label>
+    <select v-model="formData.cellColor" name="cellColor" class="w-full p-2 border mb-4">
+      <option value="skyblue">スカイブルー</option>
+      <option value="lightgreen">ライトグリーン</option>
+      <option value="lightyellow">ライトイエロー</option>
+    </select>
+
+    <label class="block mb-2">繰り返し設定</label>
+    <select v-model="formData.repeat" name="repeat" class="w-full p-2 border mb-6">
+      <option value="なし">なし</option>
+      <option value="毎週">毎週</option>
+      <option value="隔週">隔週</option>
+    </select>
+
+    <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+      保存する
+    </button>
+  </form>
 </template>
 
-<script setup>
-import { reactive } from 'vue'
+<script>
+import { ref } from 'vue'
 
-const form = reactive({
-  title: '',
-  instructor: '',
-  units: '',
-  period: '',
-  classroom: '',
-  syllabusUrl: '',
-  notes: '',
-  cellColor: '',
-  repeatSetting: ''
-})
+export default {
+  name: 'CourseForm',
+  setup() {
+    const formData = ref({
+      courseName: '',
+      teacherName: '',
+      credits: 2,
+      term: '',
+      classroom: '',
+      syllabusUrl: '',
+      notes: '',
+      cellColor: 'skyblue',
+      repeat: '',
+    })
 
-function submitForm() {
-  console.log('Form submitted:', form)
+    const handleSubmit = (e) => {
+      e.preventDefault()
+      console.log(formData.value) // ここをAPI送信などに変更可能
+      alert('保存しました')
+    }
+
+    return {
+      formData,
+      handleSubmit
+    }
+  }
 }
 </script>
 
 <style scoped>
-html, body {
-  height: 100%;
-  margin: 0;
-}
-
-.wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100vw;
-  background-color: #f7f9fc;
-}
-
-.form-container {
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 400px;
-  text-align: center; /* テキスト中央ぞろえ */
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-label {
-  display: flex;
-  flex-direction: column;
-  font-size: 14px;
-  text-align: left; /* ラベル名は左寄せにしたい場合は left に変更 */
-}
-
-input, textarea, select, button {
-  padding: 6px;
-  font-size: 14px;
-  margin-top: 4px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  background-color: #3b82f6;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #2563eb;
-}
+/* TailwindCSSクラスがそのまま使用可能です */
 </style>
