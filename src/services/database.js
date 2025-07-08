@@ -1,4 +1,9 @@
-// src/services/database.js
+/*
+作成者：土田勇斗
+初版作成者：土田勇斗
+変更履歴：
+7/7 21:52
+*/
 import Dexie from 'dexie';
 
 export class TimetableDatabase extends Dexie {
