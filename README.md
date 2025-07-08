@@ -104,6 +104,9 @@ npm run dev
 # プロダクションビルド
 npm run build
 
+#ルーティングをインストール
+npm install vue-router@4
+
 ```
 
 ### 開発ガイドライン
