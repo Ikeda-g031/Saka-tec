@@ -1,3 +1,10 @@
+<!--
+作成者：池田葉留
+初版作成者：池田葉留
+変更履歴：
+6/22 22:43
+-->
+
 <template>
   <div class="classinfoedit-screen">
     <!-- ヘッダー -->
