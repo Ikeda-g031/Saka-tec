@@ -1,3 +1,10 @@
+<!--
+作成者：伊藤聖㮈
+初版作成者：土田勇斗
+変更履歴：
+6/21 22:40
+-->
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
