@@ -1,3 +1,13 @@
+<!--
+作成者：池田葉留
+初版作成者：池田葉留
+変更履歴：
+6/22 22:43
+授業名、教員名、単位数、開講時期、教室等の入力フォームを提供
+7/7 22:00 土田勇斗
+ローカルDBの追加
+-->
+
 <template>
   <form @submit="handleSubmit" class="max-w-xl mx-auto p-6 bg-white rounded shadow">
     <h2 class="text-xl font-bold mb-4">授業情報を編集</h2>

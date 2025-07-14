@@ -1,4 +1,10 @@
-// src/services/database.js
+/*
+作成者：土田勇斗
+初版作成者：土田勇斗
+変更履歴：
+7/7 21:52
+授業データのCRUD操作、時間割データの取得、データのエクスポート・インポート機能を提供
+*/
 import Dexie from 'dexie';
 
 export class TimetableDatabase extends Dexie {

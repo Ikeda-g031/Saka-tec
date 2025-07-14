@@ -1,3 +1,13 @@
+<!--
+作成者：伊藤聖㮈
+初版作成者：伊藤聖㮈
+変更履歴：
+6/21 22:40
+授業の詳細情報を表示し、編集・削除機能を提供
+7/7 22:00 土田勇斗
+ローカルDBの追加
+-->
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
