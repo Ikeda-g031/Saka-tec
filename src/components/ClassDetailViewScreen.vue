@@ -210,12 +210,17 @@ const deleteCourse = async () => {
   font-weight: 600;
   color: #2563eb;
   margin-bottom: 10px;
+  white-space: pre-wrap;
 }
 
 .card-title {
   font-weight: 600;
   margin-bottom: 6px;
   color: #333;
+}
+
+.card p {
+  white-space: pre-wrap;
 }
 
 .link {
