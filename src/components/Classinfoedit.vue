@@ -258,7 +258,11 @@ const convertColor = (colorName) => {
 }
 
 const submitForm = async () => {
-  // 必須項目のバリデーション
+  // デバッグ用ログ
+  console.log('入力値 (courseName):', JSON.stringify(courseName.value))
+  console.log('入力値 (teacherName):', JSON.stringify(teacherName.value))
+  
+  // 必須項目のバリデーション（先頭と末尾のスペースのみ削除）
   if (!courseName.value.trim()) {
     alert('授業名を入力してください。');
     return;
@@ -270,21 +274,25 @@ const submitForm = async () => {
   }
   
   try {
-    // データベース用のデータ形式に変換
+    // データベース用のデータ形式に変換（先頭と末尾のスペースのみ削除）
     const classData = {
       name: courseName.value.trim(),
-      room: classroom.value || '',
+      room: classroom.value.trim(),
       day: parseInt(selectedDay.value),
       period: selectedPeriod.value === 'lunch' ? 'lunch' : parseInt(selectedPeriod.value),
       color: convertColor(cellColor.value),
-      teacher: teacherName.value || '',
-      note: notes.value || '',
+      teacher: teacherName.value.trim(),
+      note: notes.value.trim(),
       // 追加情報
       credits: credits.value || 0,
-      syllabusUrl: syllabusUrl.value || '',
-      repeat: repeat.value || '',
+      syllabusUrl: syllabusUrl.value.trim(),
+      repeat: repeat.value.trim(),
       notification: notification.value || ''
     };
+
+    // デバッグ用ログ
+    console.log('保存値 (name):', JSON.stringify(classData.name))
+    console.log('保存値 (teacher):', JSON.stringify(classData.teacher))
 
     if (isEditMode.value && editingClassId.value) {
       // 編集モード：既存データを更新
