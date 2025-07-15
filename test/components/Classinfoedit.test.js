@@ -105,7 +105,9 @@ describe('Classinfoedit', () => {
     it('編集モードで既存データが表示されること', async () => {
       wrapper = createWrapper({ 
         edit: 'true', 
-        id: '1' 
+        id: '1',
+        day: '0',
+        period: '1'
       })
       
       await wrapper.vm.$nextTick()
@@ -121,7 +123,9 @@ describe('Classinfoedit', () => {
     it('データが正常に更新されること', async () => {
       wrapper = createWrapper({ 
         edit: 'true', 
-        id: '1' 
+        id: '1',
+        day: '0',
+        period: '1'
       })
       
       await wrapper.vm.$nextTick()
@@ -150,16 +154,16 @@ describe('Classinfoedit', () => {
       expect(wrapper.find('input[type="text"]').exists()).toBe(true)
       
       // 担当教員
-      expect(wrapper.find('input[placeholder="例: 田中太郎"]').exists()).toBe(true)
+      expect(wrapper.find('input[placeholder="例: 山田 太郎"]').exists()).toBe(true)
       
       // 単位数
       expect(wrapper.find('input[type="number"]').exists()).toBe(true)
       
       // 教室
-      expect(wrapper.find('input[placeholder="例: 101"]').exists()).toBe(true)
+      expect(wrapper.find('input[placeholder="例: 201F"]').exists()).toBe(true)
       
       // シラバスURL
-      expect(wrapper.find('input[placeholder="例: https://example.com"]').exists()).toBe(true)
+      expect(wrapper.find('input[placeholder="https://example.com/syllabus"]').exists()).toBe(true)
       
       // メモ
       expect(wrapper.find('textarea').exists()).toBe(true)
