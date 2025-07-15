@@ -34,6 +34,7 @@
             v-model="courseName"
             placeholder="例: 情報基礎"
             class="form-input"
+            maxlength="50"
             required
           />
         </div>
@@ -45,6 +46,7 @@
             v-model="teacherName"
             placeholder="例: 山田 太郎"
             class="form-input"
+            maxlength="50"
           />
         </div>
         <!-- 単位数 -->
@@ -89,6 +91,7 @@
             v-model="classroom"
             placeholder="例: 201F"
             class="form-input"
+            maxlength="20"
           />
         </div>
         <!-- シラバスURL -->
@@ -99,6 +102,7 @@
             v-model="syllabusUrl"
             placeholder="https://example.com/syllabus"
             class="form-input"
+            maxlength="500"
           />
         </div>
         <!-- 授業概要/備考 -->
@@ -108,6 +112,7 @@
             v-model="notes"
             placeholder="持ち物やメモなど"
             class="form-textarea"
+            maxlength="1000"
           ></textarea>
         </div>
         <!-- セルの色 -->
@@ -127,6 +132,7 @@
             v-model="repeat"
             placeholder="例: 毎週月曜 1限"
             class="form-input"
+            maxlength="100"
           />
         </div>
         <!-- 通知設定 -->
@@ -376,6 +382,9 @@ const submitForm = async () => {
   font-size: 1rem;
   background-color: white;
   color: #333;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .form-textarea {

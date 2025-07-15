@@ -34,6 +34,7 @@
             v-model="title"
             placeholder="例: サークルのミーティング"
             class="form-input"
+            maxlength="50"
             required
           />
         </div>
@@ -45,6 +46,7 @@
             v-model="memo"
             placeholder="場所や内容など"
             class="form-textarea"
+            maxlength="500"
           ></textarea>
         </div>
 
@@ -229,6 +231,9 @@ const submitForm = async () => {
   font-size: 1rem;
   background-color: white;
   color: #333;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .form-textarea {
