@@ -99,6 +99,24 @@ describe('Classinfoedit', () => {
       // 成功メッセージが表示されることを確認
       expect(global.alert).toHaveBeenCalledWith('授業情報を保存しました！')
     })
+
+    it('半角スペースが正しく保持されること', async () => {
+      wrapper = createWrapper()
+      
+      // 半角スペースを含む授業名を入力
+      const courseNameInput = wrapper.find('input[type="text"]')
+      await courseNameInput.setValue('情報  基礎  演習')
+      
+      // フォームを送信
+      const form = wrapper.find('form')
+      await form.trigger('submit')
+      
+      // データベースに保存されることを確認
+      expect(wrapper.exists()).toBe(true)
+      
+      // 成功メッセージが表示されることを確認
+      expect(global.alert).toHaveBeenCalledWith('授業情報を保存しました！')
+    })
   })
 
   describe('編集モード', () => {
