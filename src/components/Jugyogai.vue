@@ -114,7 +114,7 @@ const goBack = () => {
 }
 
 const submitForm = async () => {
-  // 必須項目のバリデーション
+  // 必須項目のバリデーション（先頭と末尾のスペースのみ削除）
   if (!title.value.trim()) {
     alert('予定のタイトルを入力してください。');
     return;
@@ -126,7 +126,7 @@ const submitForm = async () => {
   }
   
   try {
-    // データベース用のデータ形式に変換
+    // データベース用のデータ形式に変換（先頭と末尾のスペースのみ削除）
     const eventData = {
       name: title.value.trim(),
       room: '', // 授業以外の予定では教室は空
@@ -134,7 +134,7 @@ const submitForm = async () => {
       period: selectedPeriod.value === 'lunch' ? 'lunch' : parseInt(selectedPeriod.value),
       color: 'orange', // 授業以外の予定は固定色
       teacher: '', // 授業以外の予定では教員は空
-      note: memo.value || '',
+      note: memo.value.trim(),
       // 追加情報
       credits: 0, // 授業以外の予定では単位数は0
       syllabusUrl: '',

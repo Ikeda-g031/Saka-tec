@@ -64,6 +64,7 @@ const scheduleData = ref({})
 const loadScheduleData = async () => {
   try {
     scheduleData.value = await timetableService.getScheduleData()
+    console.log('読み込まれたスケジュールデータ:', scheduleData.value)
   } catch (error) {
     console.error('データ読み込みエラー:', error)
   }
@@ -404,12 +405,14 @@ const parseCellId = (cellId) => {
   color: #333;
   margin-bottom: 4px;
   line-height: 1.2;
+  white-space: pre-wrap; /* 追加 */
 }
 
 .class-room {
   font-size: 0.9rem;
   color: #666;
   line-height: 1.2;
+  white-space: pre-wrap; /* 追加 */
 }
 
 /* 色分けスタイル */

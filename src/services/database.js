@@ -73,6 +73,7 @@ export class TimetableService {
   // 時間割形式のデータを取得
   async getScheduleData() {
     const classes = await this.getAllClasses();
+    console.log('データベースから取得した生データ:', classes);
     const scheduleData = {};
     
     // 曜日マッピング
@@ -92,6 +93,7 @@ export class TimetableService {
       };
     });
     
+    console.log('変換後のスケジュールデータ:', scheduleData);
     return scheduleData;
   }
   
