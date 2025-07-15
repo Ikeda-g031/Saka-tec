@@ -221,6 +221,10 @@ const deleteCourse = async () => {
 .link {
   color: #2563eb;
   text-decoration: underline;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  display: inline-block;
 }
 
 /* 削除セクション */
