@@ -187,6 +187,16 @@ onMounted(async () => {
   weekRange.value = getCurrentWeekRange()
   weekDates.value = getWeekDates()
   
+  // データの整合性チェック・クリーンアップ
+  try {
+    const cleanedCount = await timetableService.cleanupDuplicateData()
+    if (cleanedCount > 0) {
+      console.log(`${cleanedCount}件の重複データを削除しました`)
+    }
+  } catch (error) {
+    console.error('データクリーンアップエラー:', error)
+  }
+  
   await addSampleData()
   await loadScheduleData()
 })
