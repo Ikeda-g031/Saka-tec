@@ -14,7 +14,7 @@ export class TimetableDatabase extends Dexie {
     // データベーススキーマを定義
     this.version(1).stores({
       // 授業データテーブル
-      classes: '++id, name, room, day, period, color, teacher, note, createdAt, updatedAt',
+      classes: '++id, name, room, day, period, color, teacher, note, repeat, repeatEndType, repeatEndDate, repeatCount, createdAt, updatedAt',
       
       // 設定テーブル
       settings: '++id, key, value',
@@ -87,7 +87,7 @@ export class TimetableService {
   }
   
   // 時間割形式のデータを取得
-  async getScheduleData() {
+  async getScheduleData(targetWeekStart = null) {
     const classes = await this.getAllClasses();
     console.log('データベースから取得した生データ:', classes);
     const scheduleData = {};
@@ -97,25 +97,85 @@ export class TimetableService {
       0: 'mon', 1: 'tue', 2: 'wed', 3: 'thu', 4: 'fri'
     };
     
-    // 同じセルに複数のデータがある場合、最新のもの（IDが最大）を使用
+    // 対象週の開始日を設定（指定がない場合は現在の週）
+    const weekStart = targetWeekStart || this.getWeekStart(new Date());
+    
+    // 各授業データを処理
     classes.forEach(classItem => {
       const cellId = `${dayMap[classItem.day]}-${classItem.period}`;
       
-      // 既存のデータがない場合、または既存のデータよりIDが大きい場合のみ更新
-      if (!scheduleData[cellId] || scheduleData[cellId].id < classItem.id) {
-        scheduleData[cellId] = {
-          id: classItem.id,
-          name: classItem.name,
-          room: classItem.room,
-          color: classItem.color,
-          teacher: classItem.teacher,
-          note: classItem.note
-        };
+      // 繰り返し設定に基づいて授業を表示するかチェック
+      if (this.shouldShowClass(classItem, weekStart)) {
+        // 既存のデータがない場合、または既存のデータよりIDが大きい場合のみ更新
+        if (!scheduleData[cellId] || scheduleData[cellId].id < classItem.id) {
+          scheduleData[cellId] = {
+            id: classItem.id,
+            name: classItem.name,
+            room: classItem.room,
+            color: classItem.color,
+            teacher: classItem.teacher,
+            note: classItem.note
+          };
+        }
       }
     });
     
     console.log('変換後のスケジュールデータ:', scheduleData);
     return scheduleData;
+  }
+
+  // 週の開始日を取得（月曜日）
+  getWeekStart(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff));
+  }
+
+  // 繰り返し設定に基づいて授業を表示するかチェック
+  shouldShowClass(classItem, weekStart) {
+    // 作成日を取得
+    const createdDate = new Date(classItem.createdAt);
+    const createdWeekStart = this.getWeekStart(createdDate);
+    
+    // 作成週と対象週の差を計算（週単位）
+    const weekDiff = Math.floor((weekStart.getTime() - createdWeekStart.getTime()) / (7 * 24 * 60 * 60 * 1000));
+    
+    // 繰り返し設定に基づく判定
+    switch (classItem.repeat) {
+      case 'none':
+        // 繰り返さない場合は作成された週のみ表示
+        return weekDiff === 0;
+        
+      case 'weekly':
+        // 毎週の場合は作成週以降に表示
+        return weekDiff >= 0 && this.checkRepeatEnd(classItem, weekStart, weekDiff);
+        
+      default:
+        // 繰り返し設定がない場合は作成された週のみ表示
+        return weekDiff === 0;
+    }
+  }
+
+  // 繰り返し終了条件をチェック
+  checkRepeatEnd(classItem, weekStart, weekDiff) {
+    // 終了条件がない場合は常に表示
+    if (!classItem.repeatEndType || classItem.repeatEndType === 'never') {
+      return true;
+    }
+
+    // 指定日まで
+    if (classItem.repeatEndType === 'date' && classItem.repeatEndDate) {
+      const endDate = new Date(classItem.repeatEndDate);
+      return weekStart <= endDate;
+    }
+
+    // 指定回数まで
+    if (classItem.repeatEndType === 'count' && classItem.repeatCount) {
+      return weekDiff < classItem.repeatCount;
+    }
+
+    return true;
   }
   
   // データをエクスポート

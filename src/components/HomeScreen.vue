@@ -113,7 +113,7 @@ const scheduleData = ref({})
 // データベースから時間割データを読み込み
 const loadScheduleData = async () => {
   try {
-    scheduleData.value = await timetableService.getScheduleData()
+    scheduleData.value = await timetableService.getScheduleData(currentWeekStart.value)
     console.log('読み込まれたスケジュールデータ:', scheduleData.value)
   } catch (error) {
     console.error('データ読み込みエラー:', error)
@@ -225,7 +225,7 @@ const getCellColorClass = (cellData) => {
 }
 
 // 週の変更機能
-const previousWeek = () => {
+const previousWeek = async () => {
   // 現在の週の開始日から7日前に移動
   const newDate = new Date(currentWeekStart.value)
   newDate.setDate(newDate.getDate() - 7)
@@ -235,10 +235,13 @@ const previousWeek = () => {
   weekRange.value = getCurrentWeekRange()
   weekDates.value = getWeekDates()
   
+  // スケジュールデータを再読み込み
+  await loadScheduleData()
+  
   console.log('前の週へ移動:', weekRange.value)
 }
 
-const nextWeek = () => {
+const nextWeek = async () => {
   // 現在の週の開始日から7日後に移動
   const newDate = new Date(currentWeekStart.value)
   newDate.setDate(newDate.getDate() + 7)
@@ -247,6 +250,9 @@ const nextWeek = () => {
   // 表示を更新
   weekRange.value = getCurrentWeekRange()
   weekDates.value = getWeekDates()
+  
+  // スケジュールデータを再読み込み
+  await loadScheduleData()
   
   console.log('次の週へ移動:', weekRange.value)
 }
@@ -544,6 +550,31 @@ const parseCellId = (cellId) => {
 .cell-purple {
   background: linear-gradient(135deg, #e8d4f0 0%, #d1a8e6 100%);
   border-left: 4px solid #9c27b0;
+}
+
+.cell-red {
+  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+  border-left: 4px solid #f44336;
+}
+
+.cell-yellow {
+  background: linear-gradient(135deg, #fffde7 0%, #fff9c4 100%);
+  border-left: 4px solid #ffeb3b;
+}
+
+.cell-pink {
+  background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%);
+  border-left: 4px solid #e91e63;
+}
+
+.cell-indigo {
+  background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+  border-left: 4px solid #3f51b5;
+}
+
+.cell-gray {
+  background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+  border-left: 4px solid #9e9e9e;
 }
 
 /* レスポンシブデザイン */
