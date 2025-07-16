@@ -546,6 +546,31 @@ const parseCellId = (cellId) => {
   border-left: 4px solid #9c27b0;
 }
 
+.cell-red {
+  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+  border-left: 4px solid #f44336;
+}
+
+.cell-yellow {
+  background: linear-gradient(135deg, #fffde7 0%, #fff9c4 100%);
+  border-left: 4px solid #ffeb3b;
+}
+
+.cell-pink {
+  background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%);
+  border-left: 4px solid #e91e63;
+}
+
+.cell-indigo {
+  background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+  border-left: 4px solid #3f51b5;
+}
+
+.cell-gray {
+  background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+  border-left: 4px solid #9e9e9e;
+}
+
 /* レスポンシブデザイン */
 @media (max-width: 768px) {
   .header {

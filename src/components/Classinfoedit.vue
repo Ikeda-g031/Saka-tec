@@ -120,8 +120,14 @@
           <label class="form-label">セルの色</label>
           <select v-model="cellColor" class="form-select">
             <option value="skyblue">スカイブルー</option>
-            <option value="lightgreen">ライトグリーン</option>
-            <option value="lightyellow">ライトイエロー</option>
+            <option value="lightgreen">グリーン</option>
+            <option value="lightyellow">オレンジ</option>
+            <option value="purple">パープル</option>
+            <option value="red">レッド</option>
+            <option value="yellow">イエロー</option>
+            <option value="pink">ピンク</option>
+            <option value="indigo">インディゴ</option>
+            <option value="gray">グレー</option>
           </select>
         </div>
         <!-- 繰り返し設定 -->
@@ -203,7 +209,13 @@ const loadEditData = async () => {
         const colorMap = {
           'blue': 'skyblue',
           'green': 'lightgreen',
-          'orange': 'lightyellow'
+          'orange': 'lightyellow',
+          'purple': 'purple',
+          'red': 'red',
+          'yellow': 'yellow',
+          'pink': 'pink',
+          'indigo': 'indigo',
+          'gray': 'gray'
         }
         cellColor.value = colorMap[classData.color] || 'skyblue'
       }
@@ -252,7 +264,13 @@ const convertColor = (colorName) => {
   const colorMap = {
     'skyblue': 'blue',
     'lightgreen': 'green',
-    'lightyellow': 'orange'
+    'lightyellow': 'orange',
+    'purple': 'purple',
+    'red': 'red',
+    'yellow': 'yellow',
+    'pink': 'pink',
+    'indigo': 'indigo',
+    'gray': 'gray'
   };
   return colorMap[colorName] || 'blue';
 }
