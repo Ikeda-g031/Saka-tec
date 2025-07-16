@@ -69,7 +69,18 @@ const getCurrentWeekRange = () => {
 
 // 曜日とセル数の定義
 const days = ['月', '火', '水', '木', '金']
-const periods = [1, 2, '昼', 3, 4, 5, 6, 7]
+
+// 時限の定義（表示用と内部処理用）
+const periodData = [
+  { title: '1限', time: '8:50〜', value: 1 },
+  { title: '2限', time: '10:30〜', value: 2 },
+  { title: '昼', time: '12:00〜', value: '昼' },
+  { title: '3限', time: '13:00〜', value: 3 },
+  { title: '4限', time: '14:40〜', value: 4 },
+  { title: '5限', time: '16:20〜', value: 5 },
+  { title: '6限', time: '18:00〜', value: 6 },
+  { title: '7限', time: '19:40〜', value: 7 }
+]
 
 // 現在の週の基準日を管理
 const currentWeekStart = ref(getWeekStart(new Date()))
@@ -186,9 +197,10 @@ onActivated(async () => {
 })
 
 // セルIDの生成
-const getCellId = (dayIndex, period) => {
+const getCellId = (dayIndex, periodIndex) => {
   const dayNames = ['mon', 'tue', 'wed', 'thu', 'fri']
-  return `${dayNames[dayIndex]}-${period}`
+  const periodValue = periodData[periodIndex].value
+  return `${dayNames[dayIndex]}-${periodValue}`
 }
 
 // セルデータの取得
@@ -287,31 +299,32 @@ const parseCellId = (cellId) => {
 
       <!-- 時間割の行 -->
       <div
-        v-for="period in periods"
-        :key="period"
+        v-for="(periodInfo, periodIndex) in periodData"
+        :key="periodInfo.value"
         class="timetable-row"
       >
         <!-- 時限表示 -->
         <div class="period-cell">
-          {{ period }}
+          <div class="period-title">{{ periodInfo.title }}</div>
+          <div class="period-time">{{ periodInfo.time }}</div>
         </div>
 
         <!-- 授業セル -->
         <div
           v-for="(day, dayIndex) in days"
-          :key="`${day}-${period}`"
-          :class="['schedule-cell', getCellColorClass(getCellData(getCellId(dayIndex, period)))]"
-          @click="onCellClick(getCellId(dayIndex, period))"
+          :key="`${day}-${periodInfo.value}`"
+          :class="['schedule-cell', getCellColorClass(getCellData(getCellId(dayIndex, periodIndex)))]"
+          @click="onCellClick(getCellId(dayIndex, periodIndex))"
         >
           <div
-            v-if="getCellData(getCellId(dayIndex, period))"
+            v-if="getCellData(getCellId(dayIndex, periodIndex))"
             class="class-content"
           >
             <div class="class-name">
-              {{ getCellData(getCellId(dayIndex, period)).name }}
+              {{ getCellData(getCellId(dayIndex, periodIndex)).name }}
             </div>
             <div class="class-room">
-              {{ getCellData(getCellId(dayIndex, period)).room }}
+              {{ getCellData(getCellId(dayIndex, periodIndex)).room }}
             </div>
           </div>
         </div>
@@ -428,23 +441,36 @@ const parseCellId = (cellId) => {
 
 .timetable-row {
   display: grid;
-  grid-template-columns: minmax(60px, 80px) repeat(5, 1fr);
+  grid-template-columns: minmax(120px, 150px) repeat(5, 1fr);
   border-bottom: 1px solid #e0e0e0;
   width: 100%;
 }
 
 .period-cell {
   background: #d1d9e6;
-  padding: 15px 8px;
+  padding: 8px 4px;
   text-align: center;
-  font-weight: 600;
-  font-size: 1.1rem;
   color: #333;
   border-right: 1px solid #ccc;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 70px;
+  line-height: 1.2;
+}
+
+.period-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.period-time {
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: #666;
+  opacity: 0.8;
 }
 
 .schedule-cell {
@@ -528,7 +554,7 @@ const parseCellId = (cellId) => {
 
   .header-row,
   .timetable-row {
-    grid-template-columns: minmax(35px, 50px) repeat(5, 1fr);
+    grid-template-columns: minmax(80px, 100px) repeat(5, 1fr);
   }
 
   .day-header {
@@ -545,9 +571,17 @@ const parseCellId = (cellId) => {
   }
 
   .period-cell {
-    padding: 12px 1px;
-    font-size: 0.9rem;
+    padding: 6px 2px;
     min-height: 60px;
+  }
+
+  .period-title {
+    font-size: 0.9rem;
+    margin-bottom: 1px;
+  }
+
+  .period-time {
+    font-size: 0.65rem;
   }
 
   .schedule-cell {
@@ -574,7 +608,7 @@ const parseCellId = (cellId) => {
 
   .header-row,
   .timetable-row {
-    grid-template-columns: minmax(30px, 40px) repeat(5, 1fr);
+    grid-template-columns: minmax(60px, 80px) repeat(5, 1fr);
   }
 
   .day-header {
@@ -591,9 +625,17 @@ const parseCellId = (cellId) => {
   }
 
   .period-cell {
-    padding: 10px 1px;
-    font-size: 0.8rem;
+    padding: 4px 1px;
     min-height: 50px;
+  }
+
+  .period-title {
+    font-size: 0.8rem;
+    margin-bottom: 1px;
+  }
+
+  .period-time {
+    font-size: 0.6rem;
   }
 
   .schedule-cell {
@@ -617,9 +659,17 @@ const parseCellId = (cellId) => {
   }
 
   .period-cell {
-    padding: 20px 12px;
-    font-size: 1.2rem;
+    padding: 12px 8px;
     min-height: 80px;
+  }
+
+  .period-title {
+    font-size: 1.2rem;
+    margin-bottom: 3px;
+  }
+
+  .period-time {
+    font-size: 0.9rem;
   }
 
   .schedule-cell {
