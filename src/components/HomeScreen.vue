@@ -67,13 +67,34 @@ const getCurrentWeekRange = () => {
   return `${formatDate(weekStart)} - ${formatDate(weekEnd)}`
 }
 
+// 曜日とセル数の定義
+const days = ['月', '火', '水', '木', '金']
+const periods = [1, 2, '昼', 3, 4, 5, 6, 7]
+
 // 現在の週の基準日を管理
 const currentWeekStart = ref(getWeekStart(new Date()))
 const weekRange = ref(getCurrentWeekRange())
 
-// 曜日とセル数の定義
-const days = ['月', '火', '水', '木', '金']
-const periods = [1, 2, '昼', 3, 4, 5, 6, 7]
+// 現在の週の各日付を取得する関数
+const getWeekDates = () => {
+  const weekStart = currentWeekStart.value
+  const dates = []
+  
+  for (let i = 0; i < 5; i++) { // 月曜日から金曜日まで
+    const date = new Date(weekStart)
+    date.setDate(weekStart.getDate() + i)
+    dates.push({
+      day: days[i],
+      date: date,
+      formatted: `${date.getMonth() + 1}/${date.getDate()}`
+    })
+  }
+  
+  return dates
+}
+
+// 現在の週の日付配列
+const weekDates = ref([])
 
 // 時間割データ（データベースから取得）
 const scheduleData = ref({})
@@ -153,6 +174,7 @@ onMounted(async () => {
   // 現在の週を初期化
   currentWeekStart.value = getWeekStart(new Date())
   weekRange.value = getCurrentWeekRange()
+  weekDates.value = getWeekDates()
   
   await addSampleData()
   await loadScheduleData()
@@ -189,6 +211,7 @@ const previousWeek = () => {
   
   // 表示を更新
   weekRange.value = getCurrentWeekRange()
+  weekDates.value = getWeekDates()
   
   console.log('前の週へ移動:', weekRange.value)
 }
@@ -201,6 +224,7 @@ const nextWeek = () => {
   
   // 表示を更新
   weekRange.value = getCurrentWeekRange()
+  weekDates.value = getWeekDates()
   
   console.log('次の週へ移動:', weekRange.value)
 }
@@ -252,11 +276,12 @@ const parseCellId = (cellId) => {
       <div class="header-row">
         <div class="period-header"></div>
         <div
-          v-for="day in days"
-          :key="day"
+          v-for="(dateInfo, index) in weekDates"
+          :key="index"
           class="day-header"
         >
-          {{ day }}
+          <div class="day-name">{{ dateInfo.day }}</div>
+          <div class="day-date">{{ dateInfo.formatted }}</div>
         </div>
       </div>
 
@@ -375,15 +400,26 @@ const parseCellId = (cellId) => {
 
 .day-header {
   background: #d1d9e6;
-  padding: 12px 8px;
+  padding: 8px 4px;
   text-align: center;
   font-weight: 600;
-  font-size: 1.1rem;
   color: #333;
   border-right: 1px solid #ccc;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.day-name {
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+}
+
+.day-date {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #666;
 }
 
 .day-header:last-child {
@@ -496,8 +532,16 @@ const parseCellId = (cellId) => {
   }
 
   .day-header {
-    padding: 10px 1px;
+    padding: 6px 1px;
+  }
+
+  .day-name {
     font-size: 0.9rem;
+    margin-bottom: 1px;
+  }
+
+  .day-date {
+    font-size: 0.7rem;
   }
 
   .period-cell {
@@ -534,8 +578,16 @@ const parseCellId = (cellId) => {
   }
 
   .day-header {
-    padding: 8px 1px;
+    padding: 4px 1px;
+  }
+
+  .day-name {
     font-size: 0.8rem;
+    margin-bottom: 1px;
+  }
+
+  .day-date {
+    font-size: 0.6rem;
   }
 
   .period-cell {
