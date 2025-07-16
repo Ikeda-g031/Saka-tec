@@ -46,11 +46,29 @@ const goToClassDetailViewScreen = (classId = null) => {
   }
 }
 
-// 現在の週の期間を計算
-const getCurrentWeekRange = () => {
-  return '5月19日 - 5月23日'
+// 週の開始日を月曜日に設定する関数
+const getWeekStart = (date) => {
+  const d = new Date(date)
+  const day = d.getDay()
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1) // 月曜日を週の開始とする
+  return new Date(d.setDate(diff))
 }
 
+// 現在の週の期間を計算
+const getCurrentWeekRange = () => {
+  const weekStart = currentWeekStart.value
+  const weekEnd = new Date(weekStart)
+  weekEnd.setDate(weekStart.getDate() + 4) // 金曜日まで
+  
+  const formatDate = (date) => {
+    return `${date.getMonth() + 1}月${date.getDate()}日`
+  }
+  
+  return `${formatDate(weekStart)} - ${formatDate(weekEnd)}`
+}
+
+// 現在の週の基準日を管理
+const currentWeekStart = ref(getWeekStart(new Date()))
 const weekRange = ref(getCurrentWeekRange())
 
 // 曜日とセル数の定義
@@ -132,6 +150,10 @@ const addSampleData = async () => {
 
 // コンポーネントマウント時の処理
 onMounted(async () => {
+  // 現在の週を初期化
+  currentWeekStart.value = getWeekStart(new Date())
+  weekRange.value = getCurrentWeekRange()
+  
   await addSampleData()
   await loadScheduleData()
 })
@@ -158,13 +180,29 @@ const getCellColorClass = (cellData) => {
   return `cell-${cellData.color}`
 }
 
-// 週の変更（将来の機能）
+// 週の変更機能
 const previousWeek = () => {
-  console.log('前の週へ')
+  // 現在の週の開始日から7日前に移動
+  const newDate = new Date(currentWeekStart.value)
+  newDate.setDate(newDate.getDate() - 7)
+  currentWeekStart.value = newDate
+  
+  // 表示を更新
+  weekRange.value = getCurrentWeekRange()
+  
+  console.log('前の週へ移動:', weekRange.value)
 }
 
 const nextWeek = () => {
-  console.log('次の週へ')
+  // 現在の週の開始日から7日後に移動
+  const newDate = new Date(currentWeekStart.value)
+  newDate.setDate(newDate.getDate() + 7)
+  currentWeekStart.value = newDate
+  
+  // 表示を更新
+  weekRange.value = getCurrentWeekRange()
+  
+  console.log('次の週へ移動:', weekRange.value)
 }
 
 // セルクリック処理
