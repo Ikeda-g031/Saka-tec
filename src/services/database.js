@@ -40,6 +40,15 @@ export class TimetableService {
       updatedAt: now
     };
     
+    // 同じセル（曜日・時限）に既存の授業がある場合は削除
+    const existingClasses = await this.getClassesByDayAndPeriod(classData.day, classData.period);
+    if (existingClasses.length > 0) {
+      console.log('同じセルに既存の授業が見つかりました。削除します:', existingClasses);
+      for (const existingClass of existingClasses) {
+        await this.deleteClass(existingClass.id);
+      }
+    }
+    
     return await db.classes.add(classWithTimestamp);
   }
   
@@ -69,6 +78,13 @@ export class TimetableService {
       .where({ day: day, period: period })
       .first();
   }
+
+  // 特定の曜日・時限の全授業を取得（重複チェック用）
+  async getClassesByDayAndPeriod(day, period) {
+    return await db.classes
+      .where({ day: day, period: period })
+      .toArray();
+  }
   
   // 時間割形式のデータを取得
   async getScheduleData() {
@@ -81,16 +97,21 @@ export class TimetableService {
       0: 'mon', 1: 'tue', 2: 'wed', 3: 'thu', 4: 'fri'
     };
     
+    // 同じセルに複数のデータがある場合、最新のもの（IDが最大）を使用
     classes.forEach(classItem => {
       const cellId = `${dayMap[classItem.day]}-${classItem.period}`;
-      scheduleData[cellId] = {
-        id: classItem.id,
-        name: classItem.name,
-        room: classItem.room,
-        color: classItem.color,
-        teacher: classItem.teacher,
-        note: classItem.note
-      };
+      
+      // 既存のデータがない場合、または既存のデータよりIDが大きい場合のみ更新
+      if (!scheduleData[cellId] || scheduleData[cellId].id < classItem.id) {
+        scheduleData[cellId] = {
+          id: classItem.id,
+          name: classItem.name,
+          room: classItem.room,
+          color: classItem.color,
+          teacher: classItem.teacher,
+          note: classItem.note
+        };
+      }
     });
     
     console.log('変換後のスケジュールデータ:', scheduleData);
@@ -128,6 +149,46 @@ export class TimetableService {
     } catch (error) {
       console.error('データインポートエラー:', error);
       return false;
+    }
+  }
+
+  // データの整合性チェック・クリーンアップ
+  async cleanupDuplicateData() {
+    try {
+      const allClasses = await this.getAllClasses();
+      const seenCells = new Map();
+      const duplicateIds = [];
+
+      // 同じセルに複数のデータがある場合、古いものを削除対象とする
+      allClasses.forEach(classItem => {
+        const cellKey = `${classItem.day}-${classItem.period}`;
+        
+        if (seenCells.has(cellKey)) {
+          const existingClass = seenCells.get(cellKey);
+          // IDが小さい（古い）方を削除対象とする
+          if (classItem.id > existingClass.id) {
+            duplicateIds.push(existingClass.id);
+            seenCells.set(cellKey, classItem);
+          } else {
+            duplicateIds.push(classItem.id);
+          }
+        } else {
+          seenCells.set(cellKey, classItem);
+        }
+      });
+
+      // 重複データを削除
+      if (duplicateIds.length > 0) {
+        console.log('重複データを削除します:', duplicateIds);
+        for (const id of duplicateIds) {
+          await this.deleteClass(id);
+        }
+      }
+
+      return duplicateIds.length;
+    } catch (error) {
+      console.error('データクリーンアップエラー:', error);
+      return 0;
     }
   }
 }
