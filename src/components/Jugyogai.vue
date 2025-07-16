@@ -78,10 +78,42 @@
         <div class="form-group">
           <label class="form-label">繰り返し設定</label>
           <select v-model="repeat" class="form-select">
-            <option value="none">繰り返さない</option>
-            <option value="weekly">毎週</option>
-            <option value="monthly">毎月</option>
+                      <option value="none">繰り返さない</option>
+          <option value="weekly">毎週</option>
           </select>
+        </div>
+        
+        <!-- 繰り返し終了条件 -->
+        <div v-if="repeat !== 'none'" class="form-group">
+          <label class="form-label">繰り返し終了条件</label>
+          <select v-model="repeatEndType" class="form-select">
+            <option value="never">終了しない</option>
+            <option value="date">指定日まで</option>
+            <option value="count">指定回数まで</option>
+          </select>
+        </div>
+        
+        <!-- 終了日設定 -->
+        <div v-if="repeat !== 'none' && repeatEndType === 'date'" class="form-group">
+          <label class="form-label">終了日</label>
+          <input
+            type="date"
+            v-model="repeatEndDate"
+            class="form-input"
+          />
+        </div>
+        
+        <!-- 繰り返し回数設定 -->
+        <div v-if="repeat !== 'none' && repeatEndType === 'count'" class="form-group">
+          <label class="form-label">繰り返し回数</label>
+          <input
+            type="number"
+            v-model="repeatCount"
+            placeholder="例: 10"
+            class="form-input"
+            min="1"
+            max="100"
+          />
         </div>
 
         <!-- 決定ボタン -->
@@ -103,7 +135,10 @@ const route = useRoute()
 
 const title = ref('')
 const memo = ref('')
-const repeat = ref('none')
+const repeat = ref('weekly')
+const repeatEndType = ref('never')
+const repeatEndDate = ref('')
+const repeatCount = ref(1)
 
 // 曜日と時限の選択用（初期値をクエリパラメータから取得）
 const selectedDay = ref(parseInt(route.query.day) || 0) // 0=月, 1=火, 2=水, 3=木, 4=金
@@ -138,7 +173,10 @@ const submitForm = async () => {
       // 追加情報
       credits: 0, // 授業以外の予定では単位数は0
       syllabusUrl: '',
-      repeat: repeat.value || '',
+      repeat: repeat.value || 'weekly',
+      repeatEndType: repeatEndType.value || 'never',
+      repeatEndDate: repeatEndDate.value || '',
+      repeatCount: repeatCount.value || 1,
       notification: '',
       isEvent: true // 授業以外の予定であることを示すフラグ
     };

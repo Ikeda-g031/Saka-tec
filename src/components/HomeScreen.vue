@@ -113,7 +113,7 @@ const scheduleData = ref({})
 // データベースから時間割データを読み込み
 const loadScheduleData = async () => {
   try {
-    scheduleData.value = await timetableService.getScheduleData()
+    scheduleData.value = await timetableService.getScheduleData(currentWeekStart.value)
     console.log('読み込まれたスケジュールデータ:', scheduleData.value)
   } catch (error) {
     console.error('データ読み込みエラー:', error)
@@ -225,7 +225,7 @@ const getCellColorClass = (cellData) => {
 }
 
 // 週の変更機能
-const previousWeek = () => {
+const previousWeek = async () => {
   // 現在の週の開始日から7日前に移動
   const newDate = new Date(currentWeekStart.value)
   newDate.setDate(newDate.getDate() - 7)
@@ -235,10 +235,13 @@ const previousWeek = () => {
   weekRange.value = getCurrentWeekRange()
   weekDates.value = getWeekDates()
   
+  // スケジュールデータを再読み込み
+  await loadScheduleData()
+  
   console.log('前の週へ移動:', weekRange.value)
 }
 
-const nextWeek = () => {
+const nextWeek = async () => {
   // 現在の週の開始日から7日後に移動
   const newDate = new Date(currentWeekStart.value)
   newDate.setDate(newDate.getDate() + 7)
@@ -247,6 +250,9 @@ const nextWeek = () => {
   // 表示を更新
   weekRange.value = getCurrentWeekRange()
   weekDates.value = getWeekDates()
+  
+  // スケジュールデータを再読み込み
+  await loadScheduleData()
   
   console.log('次の週へ移動:', weekRange.value)
 }

@@ -133,12 +133,42 @@
         <!-- 繰り返し設定 -->
         <div class="form-group">
           <label class="form-label">繰り返し設定</label>
+          <select v-model="repeat" class="form-select">
+                      <option value="none">繰り返さない</option>
+          <option value="weekly">毎週</option>
+          </select>
+        </div>
+        
+        <!-- 繰り返し終了条件 -->
+        <div v-if="repeat !== 'none'" class="form-group">
+          <label class="form-label">繰り返し終了条件</label>
+          <select v-model="repeatEndType" class="form-select">
+            <option value="never">終了しない</option>
+            <option value="date">指定日まで</option>
+            <option value="count">指定回数まで</option>
+          </select>
+        </div>
+        
+        <!-- 終了日設定 -->
+        <div v-if="repeat !== 'none' && repeatEndType === 'date'" class="form-group">
+          <label class="form-label">終了日</label>
           <input
-            type="text"
-            v-model="repeat"
-            placeholder="例: 毎週月曜 1限"
+            type="date"
+            v-model="repeatEndDate"
             class="form-input"
-            maxlength="100"
+          />
+        </div>
+        
+        <!-- 繰り返し回数設定 -->
+        <div v-if="repeat !== 'none' && repeatEndType === 'count'" class="form-group">
+          <label class="form-label">繰り返し回数</label>
+          <input
+            type="number"
+            v-model="repeatCount"
+            placeholder="例: 10"
+            class="form-input"
+            min="1"
+            max="100"
           />
         </div>
         <!-- 通知設定 -->
@@ -176,7 +206,10 @@ const classroom = ref('')
 const syllabusUrl = ref('')
 const notes = ref('')
 const cellColor = ref('skyblue')
-const repeat = ref('')
+const repeat = ref('weekly')
+const repeatEndType = ref('never')
+const repeatEndDate = ref('')
+const repeatCount = ref(1)
 const notification = ref('10分前')
 
 // 編集モードかどうか
@@ -202,7 +235,10 @@ const loadEditData = async () => {
         notes.value = classData.note || ''
         selectedDay.value = classData.day || 0
         selectedPeriod.value = classData.period || 1
-        repeat.value = classData.repeat || ''
+        repeat.value = classData.repeat || 'weekly'
+        repeatEndType.value = classData.repeatEndType || 'never'
+        repeatEndDate.value = classData.repeatEndDate || ''
+        repeatCount.value = classData.repeatCount || 1
         notification.value = classData.notification || '10分前'
         
         // 色の変換
@@ -304,7 +340,10 @@ const submitForm = async () => {
       // 追加情報
       credits: credits.value || 0,
       syllabusUrl: syllabusUrl.value.trim(),
-      repeat: repeat.value.trim(),
+      repeat: repeat.value || 'weekly',
+      repeatEndType: repeatEndType.value || 'never',
+      repeatEndDate: repeatEndDate.value || '',
+      repeatCount: repeatCount.value || 1,
       notification: notification.value || ''
     };
 
