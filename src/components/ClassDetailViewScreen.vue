@@ -210,7 +210,10 @@ const deleteCourse = async () => {
   font-weight: 600;
   color: #2563eb;
   margin-bottom: 10px;
-  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  white-space: normal;
 }
 
 .card-title {
@@ -220,7 +223,10 @@ const deleteCourse = async () => {
 }
 
 .card p {
-  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  white-space: normal;
 }
 
 .link {

@@ -269,9 +269,11 @@ const submitForm = async () => {
   font-size: 1rem;
   background-color: white;
   color: #333;
-  word-wrap: break-word;
+  word-break: break-word;
   overflow-wrap: break-word;
+  hyphens: auto;
   max-width: 100%;
+  box-sizing: border-box;
 }
 
 .form-textarea {

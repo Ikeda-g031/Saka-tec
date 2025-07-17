@@ -521,14 +521,20 @@ const parseCellId = (cellId) => {
   color: #333;
   margin-bottom: 4px;
   line-height: 1.2;
-  white-space: pre-wrap; /* 追加 */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  white-space: normal;
 }
 
 .class-room {
   font-size: 0.9rem;
   color: #666;
   line-height: 1.2;
-  white-space: pre-wrap; /* 追加 */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  white-space: normal;
 }
 
 /* 色分けスタイル */
@@ -631,10 +637,16 @@ const parseCellId = (cellId) => {
 
   .class-name {
     font-size: 0.8rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   .class-room {
     font-size: 0.7rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 }
 
@@ -685,10 +697,16 @@ const parseCellId = (cellId) => {
 
   .class-name {
     font-size: 0.75rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   .class-room {
     font-size: 0.65rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 }
 
@@ -719,10 +737,16 @@ const parseCellId = (cellId) => {
 
   .class-name {
     font-size: 1.1rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   .class-room {
     font-size: 1rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 }
 
