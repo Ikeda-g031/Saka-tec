@@ -32,11 +32,23 @@ export const db = new TimetableDatabase();
 export class TimetableService {
   
   // 授業を追加
-  async addClass(classData) {
+  async addClass(classData, weekStart = null) {
     const now = new Date();
+    
+    // 週情報が指定されている場合、作成日時を調整
+    let createdAt = now;
+    if (weekStart) {
+      // 週の開始日を基準に作成日時を設定
+      const weekStartDate = new Date(weekStart);
+      const dayOfWeek = classData.day; // 0=月, 1=火, ..., 4=金
+      const targetDate = new Date(weekStartDate);
+      targetDate.setDate(weekStartDate.getDate() + dayOfWeek);
+      createdAt = targetDate;
+    }
+    
     const classWithTimestamp = {
       ...classData,
-      createdAt: now,
+      createdAt: createdAt,
       updatedAt: now
     };
     

@@ -12,21 +12,24 @@ Jugyougai.vueへ移動できるよう15行目-21行目、101行目-104行目を�
 
 <script setup>
 import { ref, onMounted, onActivated } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { timetableService } from '../services/database.js'
 
 // 画面遷移
 const router = useRouter()
+const route = useRoute()
 
 // SelectSchedule.vueへ移動
 const goToSelectSchedule = (day = null, period = null) => {
-  // 曜日・時限情報をクエリパラメータで渡す
+  // 曜日・時限情報と週情報をクエリパラメータで渡す
   const query = {}
   if (day !== null) query.day = day
   if (period !== null) {
     // 昼の場合は特別な値として'lunch'を渡す
     query.period = period === 'lunch' ? 'lunch' : period
   }
+  // 現在の週の開始日を渡す
+  query.weekStart = currentWeekStart.value.toISOString()
   
   router.push({
     path: '/SelectSchedule',
@@ -39,7 +42,10 @@ const goToClassDetailViewScreen = (classId = null) => {
   if (classId) {
     router.push({
       path: '/ClassDetailViewScreen',
-      query: { id: classId }
+      query: { 
+        id: classId,
+        weekStart: currentWeekStart.value.toISOString()
+      }
     })
   } else {
     router.push('/ClassDetailViewScreen')
@@ -182,8 +188,18 @@ const addSampleData = async () => {
 
 // コンポーネントマウント時の処理
 onMounted(async () => {
-  // 現在の週を初期化
-  currentWeekStart.value = getWeekStart(new Date())
+  // 週情報をクエリパラメータから復元（指定がない場合は現在の週）
+  if (route.query.weekStart) {
+    try {
+      currentWeekStart.value = getWeekStart(new Date(route.query.weekStart))
+    } catch (error) {
+      console.error('週情報の復元に失敗:', error)
+      currentWeekStart.value = getWeekStart(new Date())
+    }
+  } else {
+    currentWeekStart.value = getWeekStart(new Date())
+  }
+  
   weekRange.value = getCurrentWeekRange()
   weekDates.value = getWeekDates()
   
@@ -203,6 +219,20 @@ onMounted(async () => {
 
 // 画面が再度表示された時の処理（新しい授業が追加された後など）
 onActivated(async () => {
+  // 週情報をクエリパラメータから再度確認
+  if (route.query.weekStart) {
+    try {
+      const queryWeekStart = getWeekStart(new Date(route.query.weekStart))
+      if (queryWeekStart.getTime() !== currentWeekStart.value.getTime()) {
+        currentWeekStart.value = queryWeekStart
+        weekRange.value = getCurrentWeekRange()
+        weekDates.value = getWeekDates()
+      }
+    } catch (error) {
+      console.error('週情報の復元に失敗:', error)
+    }
+  }
+  
   await loadScheduleData()
 })
 
@@ -235,6 +265,12 @@ const previousWeek = async () => {
   weekRange.value = getCurrentWeekRange()
   weekDates.value = getWeekDates()
   
+  // URLを更新（履歴に追加しない）
+  router.replace({
+    path: '/',
+    query: { weekStart: currentWeekStart.value.toISOString() }
+  })
+  
   // スケジュールデータを再読み込み
   await loadScheduleData()
   
@@ -250,6 +286,12 @@ const nextWeek = async () => {
   // 表示を更新
   weekRange.value = getCurrentWeekRange()
   weekDates.value = getWeekDates()
+  
+  // URLを更新（履歴に追加しない）
+  router.replace({
+    path: '/',
+    query: { weekStart: currentWeekStart.value.toISOString() }
+  })
   
   // スケジュールデータを再読み込み
   await loadScheduleData()
@@ -521,14 +563,20 @@ const parseCellId = (cellId) => {
   color: #333;
   margin-bottom: 4px;
   line-height: 1.2;
-  white-space: pre-wrap; /* 追加 */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  white-space: normal;
 }
 
 .class-room {
   font-size: 0.9rem;
   color: #666;
   line-height: 1.2;
-  white-space: pre-wrap; /* 追加 */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  white-space: normal;
 }
 
 /* 色分けスタイル */
@@ -631,10 +679,16 @@ const parseCellId = (cellId) => {
 
   .class-name {
     font-size: 0.8rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   .class-room {
     font-size: 0.7rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 }
 
@@ -685,10 +739,16 @@ const parseCellId = (cellId) => {
 
   .class-name {
     font-size: 0.75rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   .class-room {
     font-size: 0.65rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 }
 
@@ -719,10 +779,16 @@ const parseCellId = (cellId) => {
 
   .class-name {
     font-size: 1.1rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   .class-room {
     font-size: 1rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 }
 

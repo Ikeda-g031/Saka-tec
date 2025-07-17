@@ -220,6 +220,9 @@ const editingClassId = ref(route.query.id ? parseInt(route.query.id) : null)
 const selectedDay = ref(parseInt(route.query.day) || 0) // 0=月, 1=火, 2=水, 3=木, 4=金
 const selectedPeriod = ref(route.query.period === 'lunch' ? 'lunch' : (parseInt(route.query.period) || 1)) // 1-7限 or 'lunch'
 
+// 週情報を取得
+const weekStart = ref(route.query.weekStart ? new Date(route.query.weekStart) : null)
+
 // 編集時のデータ読み込み
 const loadEditData = async () => {
   if (isEditMode.value && editingClassId.value) {
@@ -358,13 +361,20 @@ const submitForm = async () => {
       alert('授業情報を更新しました！');
     } else {
       // 新規作成モード：新しいデータを追加
-      await timetableService.addClass(classData);
+      await timetableService.addClass(classData, weekStart.value);
       console.log('登録された授業情報:', classData);
       alert('授業情報を保存しました！');
     }
     
-    // ホーム画面に戻る
-    router.push('/');
+    // ホーム画面に戻る（週情報を引き継ぐ）
+    if (weekStart.value) {
+      router.push({
+        path: '/',
+        query: { weekStart: weekStart.value.toISOString() }
+      });
+    } else {
+      router.push('/');
+    }
     
   } catch (error) {
     console.error('保存エラー:', error);
@@ -447,9 +457,11 @@ const submitForm = async () => {
   font-size: 1rem;
   background-color: white;
   color: #333;
-  word-wrap: break-word;
+  word-break: break-word;
   overflow-wrap: break-word;
+  hyphens: auto;
   max-width: 100%;
+  box-sizing: border-box;
 }
 
 .form-textarea {

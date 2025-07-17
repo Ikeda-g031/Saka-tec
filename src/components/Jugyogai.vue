@@ -144,6 +144,9 @@ const repeatCount = ref(1)
 const selectedDay = ref(parseInt(route.query.day) || 0) // 0=月, 1=火, 2=水, 3=木, 4=金
 const selectedPeriod = ref(route.query.period === 'lunch' ? 'lunch' : (parseInt(route.query.period) || 1)) // 1-7限 or 'lunch'
 
+// 週情報を取得
+const weekStart = ref(route.query.weekStart ? new Date(route.query.weekStart) : null)
+
 const goBack = () => {
   router.back()
 }
@@ -182,13 +185,20 @@ const submitForm = async () => {
     };
 
     // データベースに保存
-    await timetableService.addClass(eventData);
+    await timetableService.addClass(eventData, weekStart.value);
     
     console.log('登録された予定:', eventData);
     alert('予定を保存しました！');
     
-    // ホーム画面に戻る
-    router.push('/');
+    // ホーム画面に戻る（週情報を引き継ぐ）
+    if (weekStart.value) {
+      router.push({
+        path: '/',
+        query: { weekStart: weekStart.value.toISOString() }
+      });
+    } else {
+      router.push('/');
+    }
     
   } catch (error) {
     console.error('保存エラー:', error);
@@ -269,9 +279,11 @@ const submitForm = async () => {
   font-size: 1rem;
   background-color: white;
   color: #333;
-  word-wrap: break-word;
+  word-break: break-word;
   overflow-wrap: break-word;
+  hyphens: auto;
   max-width: 100%;
+  box-sizing: border-box;
 }
 
 .form-textarea {
