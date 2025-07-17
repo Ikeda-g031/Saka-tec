@@ -12,11 +12,12 @@ Jugyougai.vueへ移動できるよう15行目-21行目、101行目-104行目を�
 
 <script setup>
 import { ref, onMounted, onActivated } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { timetableService } from '../services/database.js'
 
 // 画面遷移
 const router = useRouter()
+const route = useRoute()
 
 // SelectSchedule.vueへ移動
 const goToSelectSchedule = (day = null, period = null) => {
@@ -41,7 +42,10 @@ const goToClassDetailViewScreen = (classId = null) => {
   if (classId) {
     router.push({
       path: '/ClassDetailViewScreen',
-      query: { id: classId }
+      query: { 
+        id: classId,
+        weekStart: currentWeekStart.value.toISOString()
+      }
     })
   } else {
     router.push('/ClassDetailViewScreen')
@@ -184,8 +188,18 @@ const addSampleData = async () => {
 
 // コンポーネントマウント時の処理
 onMounted(async () => {
-  // 現在の週を初期化
-  currentWeekStart.value = getWeekStart(new Date())
+  // 週情報をクエリパラメータから復元（指定がない場合は現在の週）
+  if (route.query.weekStart) {
+    try {
+      currentWeekStart.value = getWeekStart(new Date(route.query.weekStart))
+    } catch (error) {
+      console.error('週情報の復元に失敗:', error)
+      currentWeekStart.value = getWeekStart(new Date())
+    }
+  } else {
+    currentWeekStart.value = getWeekStart(new Date())
+  }
+  
   weekRange.value = getCurrentWeekRange()
   weekDates.value = getWeekDates()
   
@@ -205,6 +219,20 @@ onMounted(async () => {
 
 // 画面が再度表示された時の処理（新しい授業が追加された後など）
 onActivated(async () => {
+  // 週情報をクエリパラメータから再度確認
+  if (route.query.weekStart) {
+    try {
+      const queryWeekStart = getWeekStart(new Date(route.query.weekStart))
+      if (queryWeekStart.getTime() !== currentWeekStart.value.getTime()) {
+        currentWeekStart.value = queryWeekStart
+        weekRange.value = getCurrentWeekRange()
+        weekDates.value = getWeekDates()
+      }
+    } catch (error) {
+      console.error('週情報の復元に失敗:', error)
+    }
+  }
+  
   await loadScheduleData()
 })
 
@@ -237,6 +265,12 @@ const previousWeek = async () => {
   weekRange.value = getCurrentWeekRange()
   weekDates.value = getWeekDates()
   
+  // URLを更新（履歴に追加しない）
+  router.replace({
+    path: '/',
+    query: { weekStart: currentWeekStart.value.toISOString() }
+  })
+  
   // スケジュールデータを再読み込み
   await loadScheduleData()
   
@@ -252,6 +286,12 @@ const nextWeek = async () => {
   // 表示を更新
   weekRange.value = getCurrentWeekRange()
   weekDates.value = getWeekDates()
+  
+  // URLを更新（履歴に追加しない）
+  router.replace({
+    path: '/',
+    query: { weekStart: currentWeekStart.value.toISOString() }
+  })
   
   // スケジュールデータを再読み込み
   await loadScheduleData()

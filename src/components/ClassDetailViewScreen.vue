@@ -16,6 +16,9 @@ import { timetableService } from '../services/database.js'
 const router = useRouter()
 const route = useRoute()
 
+// 週情報を取得
+const weekStart = ref(route.query.weekStart ? new Date(route.query.weekStart) : null)
+
 // 表示する講義情報
 const course = ref({
   id: null,
@@ -66,13 +69,19 @@ const getDayPeriodText = (day, period) => {
 
 // 編集ボタンが押された時の処理
 const editCourse = () => {
-  // 授業データを編集画面に渡す
+  // 授業データを編集画面に渡す（週情報も引き継ぐ）
+  const query = { 
+    id: course.value.id,
+    edit: 'true'
+  }
+  
+  if (weekStart.value) {
+    query.weekStart = weekStart.value.toISOString()
+  }
+  
   router.push({
     path: '/Classinfoedit',
-    query: { 
-      id: course.value.id,
-      edit: 'true'
-    }
+    query: query
   })
 }
 
@@ -93,8 +102,15 @@ const deleteCourse = async () => {
       
       alert('授業を削除しました。')
       
-      // ホーム画面に戻る
-      router.push('/')
+      // ホーム画面に戻る（週情報を引き継ぐ）
+      if (weekStart.value) {
+        router.push({
+          path: '/',
+          query: { weekStart: weekStart.value.toISOString() }
+        });
+      } else {
+        router.push('/');
+      }
       
     } catch (error) {
       console.error('削除エラー:', error)

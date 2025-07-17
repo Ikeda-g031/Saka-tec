@@ -190,8 +190,15 @@ const submitForm = async () => {
     console.log('登録された予定:', eventData);
     alert('予定を保存しました！');
     
-    // ホーム画面に戻る
-    router.push('/');
+    // ホーム画面に戻る（週情報を引き継ぐ）
+    if (weekStart.value) {
+      router.push({
+        path: '/',
+        query: { weekStart: weekStart.value.toISOString() }
+      });
+    } else {
+      router.push('/');
+    }
     
   } catch (error) {
     console.error('保存エラー:', error);
