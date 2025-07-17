@@ -1,5 +1,5 @@
-<!--
-作成者：土田勇斗
+
+<!--作成者：土田勇斗
 初版作成者：土田勇斗
 変更履歴：
 6/21 22:52
@@ -18,22 +18,14 @@ HTMLの部分
 
 <!-- JavaScriptの部分 -->
 <script setup>
-<<<<<<< HEAD
-import Classinfoedit from './components/Classinfoedit.vue'
-=======
-import HomeScreen from './components/HomeScreen.vue'
-import ClassDetailViewScreen from './components/ClassDetailViewScreen.vue'
->>>>>>> develop
+import  from './components/Classinfoedit.vue'
+
 </script>
 
 <!-- HTMLの部分 -->
 <template>
   <div id="app">
-<<<<<<< HEAD
-    <Classinfoedit />
-=======
-    <router-view />
->>>>>>> develop
+    <Classinfoedit-view />
   </div>
 </template>
 
