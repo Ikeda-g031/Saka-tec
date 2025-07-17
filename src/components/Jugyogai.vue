@@ -34,6 +34,7 @@
             v-model="title"
             placeholder="例: サークルのミーティング"
             class="form-input"
+            maxlength="50"
             required
           />
         </div>
@@ -45,6 +46,7 @@
             v-model="memo"
             placeholder="場所や内容など"
             class="form-textarea"
+            maxlength="500"
           ></textarea>
         </div>
 
@@ -76,10 +78,42 @@
         <div class="form-group">
           <label class="form-label">繰り返し設定</label>
           <select v-model="repeat" class="form-select">
-            <option value="none">繰り返さない</option>
-            <option value="weekly">毎週</option>
-            <option value="monthly">毎月</option>
+                      <option value="none">繰り返さない</option>
+          <option value="weekly">毎週</option>
           </select>
+        </div>
+        
+        <!-- 繰り返し終了条件 -->
+        <div v-if="repeat !== 'none'" class="form-group">
+          <label class="form-label">繰り返し終了条件</label>
+          <select v-model="repeatEndType" class="form-select">
+            <option value="never">終了しない</option>
+            <option value="date">指定日まで</option>
+            <option value="count">指定回数まで</option>
+          </select>
+        </div>
+        
+        <!-- 終了日設定 -->
+        <div v-if="repeat !== 'none' && repeatEndType === 'date'" class="form-group">
+          <label class="form-label">終了日</label>
+          <input
+            type="date"
+            v-model="repeatEndDate"
+            class="form-input"
+          />
+        </div>
+        
+        <!-- 繰り返し回数設定 -->
+        <div v-if="repeat !== 'none' && repeatEndType === 'count'" class="form-group">
+          <label class="form-label">繰り返し回数</label>
+          <input
+            type="number"
+            v-model="repeatCount"
+            placeholder="例: 10"
+            class="form-input"
+            min="1"
+            max="100"
+          />
         </div>
 
         <!-- 決定ボタン -->
@@ -101,18 +135,24 @@ const route = useRoute()
 
 const title = ref('')
 const memo = ref('')
-const repeat = ref('none')
+const repeat = ref('weekly')
+const repeatEndType = ref('never')
+const repeatEndDate = ref('')
+const repeatCount = ref(1)
 
 // 曜日と時限の選択用（初期値をクエリパラメータから取得）
 const selectedDay = ref(parseInt(route.query.day) || 0) // 0=月, 1=火, 2=水, 3=木, 4=金
 const selectedPeriod = ref(route.query.period === 'lunch' ? 'lunch' : (parseInt(route.query.period) || 1)) // 1-7限 or 'lunch'
+
+// 週情報を取得
+const weekStart = ref(route.query.weekStart ? new Date(route.query.weekStart) : null)
 
 const goBack = () => {
   router.back()
 }
 
 const submitForm = async () => {
-  // 必須項目のバリデーション
+  // 必須項目のバリデーション（先頭と末尾のスペースのみ削除）
   if (!title.value.trim()) {
     alert('予定のタイトルを入力してください。');
     return;
@@ -124,7 +164,7 @@ const submitForm = async () => {
   }
   
   try {
-    // データベース用のデータ形式に変換
+    // データベース用のデータ形式に変換（先頭と末尾のスペースのみ削除）
     const eventData = {
       name: title.value.trim(),
       room: '', // 授業以外の予定では教室は空
@@ -132,23 +172,33 @@ const submitForm = async () => {
       period: selectedPeriod.value === 'lunch' ? 'lunch' : parseInt(selectedPeriod.value),
       color: 'orange', // 授業以外の予定は固定色
       teacher: '', // 授業以外の予定では教員は空
-      note: memo.value || '',
+      note: memo.value.trim(),
       // 追加情報
       credits: 0, // 授業以外の予定では単位数は0
       syllabusUrl: '',
-      repeat: repeat.value || '',
+      repeat: repeat.value || 'weekly',
+      repeatEndType: repeatEndType.value || 'never',
+      repeatEndDate: repeatEndDate.value || '',
+      repeatCount: repeatCount.value || 1,
       notification: '',
       isEvent: true // 授業以外の予定であることを示すフラグ
     };
 
     // データベースに保存
-    await timetableService.addClass(eventData);
+    await timetableService.addClass(eventData, weekStart.value);
     
     console.log('登録された予定:', eventData);
     alert('予定を保存しました！');
     
-    // ホーム画面に戻る
-    router.push('/');
+    // ホーム画面に戻る（週情報を引き継ぐ）
+    if (weekStart.value) {
+      router.push({
+        path: '/',
+        query: { weekStart: weekStart.value.toISOString() }
+      });
+    } else {
+      router.push('/');
+    }
     
   } catch (error) {
     console.error('保存エラー:', error);
@@ -229,6 +279,11 @@ const submitForm = async () => {
   font-size: 1rem;
   background-color: white;
   color: #333;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .form-textarea {

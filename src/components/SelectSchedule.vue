@@ -35,7 +35,7 @@ const goBack = () => {
   router.back()
 }
 const addLesson = () => {
-  // 授業の予定追加画面へ遷移（曜日・時限情報を引き継ぐ）
+  // 授業の予定追加画面へ遷移（曜日・時限・週情報を引き継ぐ）
   const query = router.currentRoute.value.query
   router.push({
     path: '/Classinfoedit',
@@ -43,7 +43,7 @@ const addLesson = () => {
   })
 }
 const addOther = () => {
-  // 授業以外の予定追加画面へ遷移（曜日・時限情報を引き継ぐ）
+  // 授業以外の予定追加画面へ遷移（曜日・時限・週情報を引き継ぐ）
   const query = router.currentRoute.value.query
   router.push({
     path: '/jugyogai',
@@ -88,6 +88,7 @@ const addOther = () => {
   flex: 1;
   font-size: 1.2rem;
   font-weight: 600;
+  text-align: center;
 }
 .main-content {
   display: flex;
