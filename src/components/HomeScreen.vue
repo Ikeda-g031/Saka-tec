@@ -80,7 +80,7 @@ const days = ['月', '火', '水', '木', '金']
 const periodData = [
   { title: '1限', time: '8:50〜', value: 1 },
   { title: '2限', time: '10:30〜', value: 2 },
-  { title: '昼', time: '12:00〜', value: '昼' },
+  { title: '昼', time: '12:00〜', value: 'lunch' },
   { title: '3限', time: '13:00〜', value: 3 },
   { title: '4限', time: '14:40〜', value: 4 },
   { title: '5限', time: '16:20〜', value: 5 },
@@ -138,7 +138,7 @@ const addSampleData = async () => {
     // サンプルデータを追加
     const sampleClasses = [
       {
-        name: 'システム論',
+        name: 'サンプルシステム論',
         room: '201F',
         day: 0, // 月曜日
         period: 1,
@@ -147,7 +147,7 @@ const addSampleData = async () => {
         note: ''
       },
       {
-        name: '英語',
+        name: 'サンプル英語',
         room: '303講義室',
         day: 2, // 水曜日
         period: 1,
@@ -156,7 +156,7 @@ const addSampleData = async () => {
         note: ''
       },
       {
-        name: '体育',
+        name: 'サンプル体育',
         room: '体育館',
         day: 4, // 金曜日
         period: 1,
@@ -165,7 +165,7 @@ const addSampleData = async () => {
         note: ''
       },
       {
-        name: '数学演習',
+        name: 'サンプル数学演習',
         room: '101演習室',
         day: 2, // 水曜日
         period: 3,
@@ -320,7 +320,7 @@ const parseCellId = (cellId) => {
   
   const [dayName, period] = cellId.split('-')
   const day = dayMap[dayName] || 0
-  const periodNum = period === '昼' ? 'lunch' : parseInt(period)
+  const periodNum = period === 'lunch' ? 'lunch' : parseInt(period)
   
   return { day, period: periodNum }
 }
