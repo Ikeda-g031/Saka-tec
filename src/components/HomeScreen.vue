@@ -20,13 +20,15 @@ const router = useRouter()
 
 // SelectSchedule.vueへ移動
 const goToSelectSchedule = (day = null, period = null) => {
-  // 曜日・時限情報をクエリパラメータで渡す
+  // 曜日・時限情報と週情報をクエリパラメータで渡す
   const query = {}
   if (day !== null) query.day = day
   if (period !== null) {
     // 昼の場合は特別な値として'lunch'を渡す
     query.period = period === 'lunch' ? 'lunch' : period
   }
+  // 現在の週の開始日を渡す
+  query.weekStart = currentWeekStart.value.toISOString()
   
   router.push({
     path: '/SelectSchedule',

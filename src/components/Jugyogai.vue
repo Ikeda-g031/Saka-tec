@@ -144,6 +144,9 @@ const repeatCount = ref(1)
 const selectedDay = ref(parseInt(route.query.day) || 0) // 0=月, 1=火, 2=水, 3=木, 4=金
 const selectedPeriod = ref(route.query.period === 'lunch' ? 'lunch' : (parseInt(route.query.period) || 1)) // 1-7限 or 'lunch'
 
+// 週情報を取得
+const weekStart = ref(route.query.weekStart ? new Date(route.query.weekStart) : null)
+
 const goBack = () => {
   router.back()
 }
@@ -182,7 +185,7 @@ const submitForm = async () => {
     };
 
     // データベースに保存
-    await timetableService.addClass(eventData);
+    await timetableService.addClass(eventData, weekStart.value);
     
     console.log('登録された予定:', eventData);
     alert('予定を保存しました！');
