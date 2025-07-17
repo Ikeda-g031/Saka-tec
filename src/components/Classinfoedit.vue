@@ -38,28 +38,6 @@
             required
           />
         </div>
-        <!-- 教員名 -->
-        <div class="form-group">
-          <label class="form-label">教員名</label>
-          <input
-            type="text"
-            v-model="teacherName"
-            placeholder="例: 山田 太郎"
-            class="form-input"
-            maxlength="50"
-          />
-        </div>
-        <!-- 単位数 -->
-        <div class="form-group">
-          <label class="form-label">単位数</label>
-          <input
-            type="number"
-            v-model.number="credits"
-            placeholder="例: 2"
-            class="form-input"
-            min="1"
-          />
-        </div>
         <!-- 開講時期 -->
         <div class="form-group required">
           <label class="form-label">開講時期 <span class="required-mark">*</span></label>
@@ -82,6 +60,28 @@
               <option value="7">7限</option>
             </select>
           </div>
+        </div>
+        <!-- 教員名 -->
+        <div class="form-group">
+          <label class="form-label">教員名</label>
+          <input
+            type="text"
+            v-model="teacherName"
+            placeholder="例: 山田 太郎"
+            class="form-input"
+            maxlength="50"
+          />
+        </div>
+        <!-- 単位数 -->
+        <div class="form-group">
+          <label class="form-label">単位数</label>
+          <input
+            type="number"
+            v-model.number="credits"
+            placeholder="例: 2"
+            class="form-input"
+            min="1"
+          />
         </div>
         <!-- 教室 -->
         <div class="form-group">

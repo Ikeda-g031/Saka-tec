@@ -38,18 +38,6 @@
             required
           />
         </div>
-
-        <!-- 詳細・メモ -->
-        <div class="form-group">
-          <label class="form-label">詳細・メモ</label>
-          <textarea
-            v-model="memo"
-            placeholder="場所や内容など"
-            class="form-textarea"
-            maxlength="500"
-          ></textarea>
-        </div>
-
         <!-- 日時 -->
         <div class="form-group required">
           <label class="form-label">日時 <span class="required-mark">*</span></label>
@@ -72,6 +60,16 @@
               <option value="7">7限</option>
             </select>
           </div>
+        </div>
+        <!-- 詳細・メモ -->
+        <div class="form-group">
+          <label class="form-label">詳細・メモ</label>
+          <textarea
+            v-model="memo"
+            placeholder="場所や内容など"
+            class="form-textarea"
+            maxlength="500"
+          ></textarea>
         </div>
 
         <!-- 繰り返し設定 -->
