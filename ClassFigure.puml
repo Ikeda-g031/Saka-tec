@@ -1,0 +1,90 @@
+@startuml
+' Saka-tec テストガイド・テスト実行構成クラス図（具体例）
+
+package "scripts" {
+  class RunTestsScript {
+    +run(mode)
+    +checkDependencies()
+    +executeTests()
+    +showTroubleshooting()
+  }
+}
+
+package "test" {
+  class BasicTest {
+    +add(a, b)
+    +テスト: add関数のテスト
+  }
+  class HomeScreenTest {
+    +HomeScreenの動作テスト
+    +画面遷移テスト
+    +セルクリックテスト
+  }
+  class DatabaseTest {
+    +TimetableServiceのテスト
+    +addClass(classData)
+    +getAllClasses()
+    +updateClass(classData)
+    +deleteClass(classId)
+    +getClassByDayAndPeriod(day, period)
+    +getScheduleData(weekStart)
+    +importData(data)
+    +exportData()
+  }
+}
+
+package "src/services" {
+  class TimetableService {
+    +addClass(classData)
+    +getAllClasses()
+    +updateClass(classData)
+    +deleteClass(classId)
+    +getClassByDayAndPeriod(day, period)
+    +getScheduleData(weekStart)
+    +importData(data)
+    +exportData()
+  }
+  class TimetableDatabase <<Dexie>>
+}
+
+package "src/components" {
+  class HomeScreen {
+    +scheduleData: Object
+    +onCellClick(cellId)
+    +goToSelectSchedule(day, period)
+  }
+  class Classinfoedit {
+    +courseName: String
+    +teacherName: String
+    +credits: Number
+    +submitForm()
+  }
+  class Jugyogai {
+    +title: String
+    +submitForm()
+  }
+  class SelectSchedule {
+    +addLesson()
+    +addOther()
+  }
+  class ClassDetailViewScreen {
+    +course: Object
+    +loadCourseData()
+    +editCourse()
+  }
+}
+
+RunTestsScript --> BasicTest : 実行
+RunTestsScript --> HomeScreenTest : 実行
+RunTestsScript --> DatabaseTest : 実行
+
+HomeScreenTest --> HomeScreen : テスト対象
+DatabaseTest --> TimetableService : テスト対象
+TimetableService --> TimetableDatabase : uses
+
+HomeScreen --> TimetableService : uses
+Classinfoedit --> TimetableService : uses
+Jugyogai --> TimetableService : uses
+ClassDetailViewScreen --> TimetableService : uses
+
+@enduml

@@ -1,5 +1,65 @@
 # 🧪 テスト実行ガイド（初心者向け）
 
+## 🖼️ 完成予想図（クラス図）
+
+以下は「Saka-tec テストガイド・テスト実行構成」のクラス図です。  
+各テストやサービス、コンポーネントの関係性が一目で分かります。
+
+```
++---------------------+        +---------------------+        +---------------------+
+|   RunTestsScript    |        |     BasicTest       |        |   HomeScreenTest    |
+|---------------------|        |---------------------|        |---------------------|
+| +run(mode)          |        | +add(a, b)          |        | +HomeScreenの動作テスト|
+| +checkDependencies()|        | +add関数のテスト    |        | +画面遷移テスト      |
+| +executeTests()     |        +---------------------+        | +セルクリックテスト  |
+| +showTroubleshooting()|                                    +---------------------+
++---------------------+        +---------------------+        +---------------------+
+         |                             |                              |
+         |                             |                              |
+         v                             v                              v
++---------------------+        +---------------------+        +---------------------+
+|   DatabaseTest      |        |   TimetableService  |        |   HomeScreen        |
+|---------------------|        |---------------------|        |---------------------|
+| +TimetableServiceのテスト|   | +addClass()         |        | +scheduleData       |
+| +addClass()         |        | +getAllClasses()    |        | +onCellClick()      |
+| +getAllClasses()    |        | +updateClass()      |        | +goToSelectSchedule()|
+| +updateClass()      |        | +deleteClass()      |        +---------------------+
+| +deleteClass()      |        | +getClassByDayAndPeriod()   |
+| +getClassByDayAndPeriod()|   | +getScheduleData()          |
+| +getScheduleData()  |        | +importData()               |
+| +importData()       |        | +exportData()               |
+| +exportData()       |        +-----------------------------+
++---------------------+                |
+                                       v
+                             +---------------------+
+                             | TimetableDatabase   |
+                             | <<Dexie>>           |
+                             +---------------------+
+
++---------------------+        +---------------------+        +---------------------+
+|   Classinfoedit     |        |     Jugyogai        |        |  SelectSchedule     |
+|---------------------|        |---------------------|        |---------------------|
+| +courseName         |        | +title              |        | +addLesson()        |
+| +teacherName        |        | +submitForm()       |        | +addOther()         |
+| +credits            |        +---------------------+        +---------------------+
+| +submitForm()       |
++---------------------+
+
++---------------------+
+| ClassDetailViewScreen|
+|---------------------|
+| +course             |
+| +loadCourseData()   |
+| +editCourse()       |
++---------------------+
+```
+
+- RunTestsScriptは各テスト（BasicTest, HomeScreenTest, DatabaseTest）を実行します。
+- DatabaseTestはTimetableServiceをテストします。
+- TimetableServiceはTimetableDatabase（Dexie）を利用します。
+- HomeScreenTestはHomeScreenをテストします。
+- 各コンポーネント（HomeScreen, Classinfoedit, Jugyogai, SelectSchedule, ClassDetailViewScreen）はTimetableServiceを利用します。
+
 ## 🎯 このガイドについて
 
 このガイドは、プログラミング初心者の方が簡単にテストを実行できるように作成されました。
