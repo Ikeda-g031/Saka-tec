@@ -643,7 +643,7 @@ const parseCellId = (cellId) => {
 
   .header-row,
   .timetable-row {
-    grid-template-columns: minmax(80px, 100px) repeat(5, 1fr);
+    grid-template-columns: 40px repeat(5, 1fr)!important;
   }
 
   .day-header {
@@ -674,7 +674,7 @@ const parseCellId = (cellId) => {
   }
 
   .schedule-cell {
-    min-height: 60px;
+    min-height: 65px!important; 
   }
 
   .class-name {
