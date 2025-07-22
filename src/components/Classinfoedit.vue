@@ -181,10 +181,12 @@
             <option value="なし">なし</option>
           </select>
         </div>
-        <!-- 保存ボタン -->
-        <button type="submit" class="submit-button">
-          {{ isEditMode ? '更新する' : '保存する' }}
-        </button>
+          <!-- 固定の保存ボタンエリア -->
+        <div class="fixed-button-area">
+          <button type="submit" class="submit-button" @click="submitForm">
+            {{ isEditMode ? '更新する' : '保存する' }}
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -429,6 +431,18 @@ const submitForm = async () => {
   flex: 1;
 }
 
+/* 固定ボタンエリアのスタイル */
+.fixed-button-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #f8f9fa;
+  padding: 16px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
 .form-content {
   display: flex;
   flex-direction: column;
@@ -470,9 +484,9 @@ const submitForm = async () => {
 }
 
 .submit-button {
-  margin-top: 24px;
+  margin-top: 0px;
   width: 100%;
-  padding: 12px;
+  padding: 8px;
   background-color: #039be5;
   color: white;
   font-size: 1.1rem;
