@@ -103,7 +103,7 @@ const getWeekDates = () => {
     dates.push({
       day: days[i],
       date: date,
-      formatted: `${date.getMonth() + 1}/${date.getDate()}`
+      formatted: `${date.getDate()}`
     })
   }
   
