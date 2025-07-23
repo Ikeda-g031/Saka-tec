@@ -254,6 +254,14 @@ const getCellColorClass = (cellData) => {
   return `cell-${cellData.color}`
 }
 
+// 今日の日付かどうかを判定する関数
+const isToday = (date) => {
+  const today = new Date()
+  return date.getFullYear() === today.getFullYear() &&
+         date.getMonth() === today.getMonth() &&
+         date.getDate() === today.getDate()
+}
+
 // 週の変更機能
 const previousWeek = async () => {
   // 現在の週の開始日から7日前に移動
@@ -348,7 +356,7 @@ const parseCellId = (cellId) => {
         <div
           v-for="(dateInfo, index) in weekDates"
           :key="index"
-          class="day-header"
+          :class="['day-header', { 'today': isToday(dateInfo.date) }]"
         >
           <div class="day-name">{{ dateInfo.day }}</div>
           <div class="day-date">{{ dateInfo.formatted }}</div>
@@ -495,6 +503,25 @@ const parseCellId = (cellId) => {
 
 .day-header:last-child {
   border-right: none;
+}
+
+/* 今日の日付のスタイル */
+.day-header.today {
+  position: relative;
+}
+
+.day-header.today .day-date {
+  background: #4a90e2;
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(74, 144, 226, 0.3);
 }
 
 .timetable-row {
@@ -690,6 +717,13 @@ const parseCellId = (cellId) => {
     overflow-wrap: break-word;
     hyphens: auto;
   }
+
+  /* 今日の日付スタイル（モバイル） */
+  .day-header.today .day-date {
+    width: 24px;
+    height: 24px;
+    font-size: 0.6rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -750,6 +784,13 @@ const parseCellId = (cellId) => {
     overflow-wrap: break-word;
     hyphens: auto;
   }
+
+  /* 今日の日付スタイル（小画面） */
+  .day-header.today .day-date {
+    width: 20px;
+    height: 20px;
+    font-size: 0.55rem;
+  }
 }
 
 /* 大画面用の調整 */
@@ -789,6 +830,13 @@ const parseCellId = (cellId) => {
     word-break: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
+  }
+
+  /* 今日の日付スタイル（大画面） */
+  .day-header.today .day-date {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
   }
 }
 
