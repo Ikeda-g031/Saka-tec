@@ -429,6 +429,8 @@ const submitForm = async () => {
 .form-container {
   padding: 20px;
   flex: 1;
+  padding-bottom: 80px;
+  overflow-y: auto; /* スクロール可能にする */
 }
 
 /* 固定ボタンエリアのスタイル */
