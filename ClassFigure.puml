@@ -70,23 +70,23 @@ package "src/components" {
 }
 
 ' アプリケーションの初期化フロー
-main --> App : creates
-App --> HomeScreen : mounts
-App --> TimetableService : initializes
+main "1" --> "1" App : creates
+App "1" --> "1" HomeScreen : mounts
+App "1" --> "1" TimetableService : initializes
 
 ' サービスの依存関係
-TimetableService --> TimetableDatabase : uses
+TimetableService "1" --> "1" TimetableDatabase : uses
 
 ' コンポーネントの依存関係
-HomeScreen --> TimetableService : uses
-Classinfoedit --> TimetableService : uses
-Jugyogai --> TimetableService : uses
-ClassDetailViewScreen --> TimetableService : uses
+HomeScreen "1" --> "1" TimetableService : uses
+Classinfoedit "1" --> "1" TimetableService : uses
+Jugyogai "1" --> "1" TimetableService : uses
+ClassDetailViewScreen "1" --> "1" TimetableService : uses
 
 ' ナビゲーションフロー
-HomeScreen --> SelectSchedule : navigates
-HomeScreen --> ClassDetailViewScreen : navigates
-SelectSchedule --> Classinfoedit : navigates
-SelectSchedule --> Jugyogai : navigates
+HomeScreen "1" --> "0..*" SelectSchedule : navigates
+HomeScreen "1" --> "0..*" ClassDetailViewScreen : navigates
+SelectSchedule "1" --> "0..1" Classinfoedit : navigates
+SelectSchedule "1" --> "0..1" Jugyogai : navigates
 
 @enduml
