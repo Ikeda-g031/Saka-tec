@@ -9,15 +9,50 @@
 -->
 
 <template>
-  <div class="classinfoedit-screen">
-    <!-- ヘッダー -->
-    <div class="header">
-      <button class="nav-button" @click="goBack">
-        <span class="arrow">‹</span>
-      </button>
-      <h1 class="header-title">{{ isEditMode ? '授業情報を編集' : '新規授業情報を入力' }}</h1>
-    </div>
+  <form @submit="handleSubmit" class="max-w-xl mx-auto p-6 bg-white rounded shadow">
+    <h2 class="text-xl font-bold mb-4">授業情報を編集</h2>
 
+<<<<<<< HEAD
+    <label class="block mb-2">授業名</label>
+    <input v-model="formData.courseName" name="courseName" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">教員名</label>
+    <input v-model="formData.teacherName" name="teacherName" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">単位数</label>
+    <input v-model.number="formData.credits" name="credits" type="number" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">開講期間</label>
+    <input v-model="formData.term" name="term" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">教室</label>
+    <input v-model="formData.classroom" name="classroom" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">シラバスURL</label>
+    <input v-model="formData.syllabusUrl" name="syllabusUrl" type="url" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">授業概要/備考</label>
+    <textarea v-model="formData.notes" name="notes" rows="3" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">セルの色</label>
+    <select v-model="formData.cellColor" name="cellColor" class="w-full p-2 border mb-4">
+      <option value="skyblue">スカイブルー</option>
+      <option value="lightgreen">ライトグリーン</option>
+      <option value="lightyellow">ライトイエロー</option>
+    </select>
+
+    <label class="block mb-2">繰り返し設定</label>
+    <select v-model="formData.repeat" name="repeat" class="w-full p-2 border mb-6">
+      <option value="なし">なし</option>
+      <option value="毎週">毎週</option>
+      <option value="隔週">隔週</option>
+    </select>
+
+    <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+      保存する
+    </button>
+  </form>
+=======
     <!-- 入力フォーム -->
     <div class="form-container">
       <!-- 必須項目の説明 -->
@@ -190,16 +225,33 @@
       </form>
     </div>
   </div>
+>>>>>>> ed897ff7cde957d7468a89fafe39c7aef3313793
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { timetableService } from '../services/database.js'
+<script>
+import { ref } from 'vue'
 
-const router = useRouter()
-const route = useRoute()
+export default {
+  name: 'CourseForm',
+  setup() {
+    const formData = ref({
+      courseName: '',
+      teacherName: '',
+      credits: 2,
+      term: '',
+      classroom: '',
+      syllabusUrl: '',
+      notes: '',
+      cellColor: 'skyblue',
+      repeat: '',
+    })
 
+<<<<<<< HEAD
+    const handleSubmit = (e) => {
+      e.preventDefault()
+      console.log(formData.value) // ここをAPI送信などに変更可能
+      alert('保存しました')
+=======
 const courseName = ref('')
 const teacherName = ref('')
 const credits = ref('')
@@ -262,10 +314,15 @@ const loadEditData = async () => {
       }
     } catch (error) {
       console.error('編集データ読み込みエラー:', error)
+>>>>>>> ed897ff7cde957d7468a89fafe39c7aef3313793
     }
-  }
-}
 
+<<<<<<< HEAD
+    return {
+      formData,
+      handleSubmit
+    }
+=======
 // コンポーネントマウント時の処理
 onMounted(async () => {
   await loadEditData()
@@ -371,6 +428,7 @@ const submitForm = async () => {
     // ホーム画面に戻る（週情報を引き継ぐ）
     if (weekStart.value) {
       router.push({
+ 
         path: '/',
         query: { weekStart: weekStart.value.toISOString() }
       });
@@ -381,11 +439,15 @@ const submitForm = async () => {
   } catch (error) {
     console.error('保存エラー:', error);
     alert('保存に失敗しました。もう一度お試しください。');
+>>>>>>> ed897ff7cde957d7468a89fafe39c7aef3313793
   }
 }
 </script>
 
 <style scoped>
+<<<<<<< HEAD
+/* TailwindCSSクラスがそのまま使用可能です */
+=======
 .classinfoedit-screen {
   width: 100%;
   min-height: 100vh;
@@ -543,4 +605,5 @@ const submitForm = async () => {
   border-color: #0056b3;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
+>>>>>>> ed897ff7cde957d7468a89fafe39c7aef3313793
 </style>
